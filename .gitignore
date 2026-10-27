@@ -1,0 +1,14 @@
+# Runtime state & user settings
+data/overlay-state.json
+data/overlay-state.json.tmp
+data/live-state.json
+data/ui-settings.json
+data/map-override.json
+
+# Downloaded icon cache (auto-downloaded at runtime)
+data/icons/
+
+# Node / OS files
+node_modules/
+Thumbs.db
+.DS_Store
