@@ -284,9 +284,65 @@ function syncFromQuestlogFiles() {
     }
     if (tracker.kills) state.kills = { ...state.kills, ...tracker.kills };
     if (tracker.soulsGained) state.soulsGained = { ...state.soulsGained, ...tracker.soulsGained };
-    if (tracker.map) {
+    if (tracker.map && db.worlds[String(tracker.map)]) {
       updateMapAndArea(tracker.map);
       changed = true;
+    }
+
+    // Infer current location & area from recent killedAt if live coordinates are missing
+    if (tracker.killedAt && typeof tracker.killedAt === "object") {
+      let newestNpc = null;
+      let newestTime = 0;
+      const now = Date.now();
+      for (const [npcId, time] of Object.entries(tracker.killedAt)) {
+        if (typeof time === "number" && time > newestTime) {
+          newestTime = time;
+          newestNpc = npcId;
+        }
+      }
+      if (newestNpc && (now - newestTime < 2 * 3600 * 1000)) {
+        for (const pet of db.pets) {
+          if (pet.npcs.includes(Number(newestNpc))) {
+            for (const [wId, spawns] of Object.entries(pet.spawnsByWorld)) {
+              const npcSpawns = spawns.filter(s => String(s.npc) === String(newestNpc));
+              if (npcSpawns.length > 0) {
+                if (!state.location.mapId || (state.location.mapId === "1010" && wId !== "1010")) {
+                  updateMapAndArea(wId);
+                  changed = true;
+                }
+                if (state.location.x === null || (Date.now() - (state.location.updatedAt || 0) > 45000)) {
+                  let sx = 0, sy = 0;
+                  for (const s of npcSpawns) { sx += s.x; sy += s.y; }
+                  const cx = Math.round(sx / npcSpawns.length);
+                  const cy = Math.round(sy / npcSpawns.length);
+                  updateMapAndArea(wId, cx, -cy);
+                  changed = true;
+                }
+                break;
+              }
+            }
+            break;
+          }
+        }
+      }
+
+      // If live packets have 0 NPCs around, populate around from tracker.around or recent kills
+      if (state.liveNpcs.size === 0) {
+        const aroundMap = {};
+        if (tracker.around && Object.keys(tracker.around).length > 0) {
+          Object.assign(aroundMap, tracker.around);
+        } else {
+          for (const [npcId, time] of Object.entries(tracker.killedAt)) {
+            if (now - time < 300000) { // within last 5 minutes
+              aroundMap[npcId] = (aroundMap[npcId] || 0) + 1;
+            }
+          }
+        }
+        if (Object.keys(aroundMap).length > 0) {
+          state.aroundCounts = aroundMap;
+          changed = true;
+        }
+      }
     }
   }
 
@@ -312,39 +368,35 @@ function syncFromQuestlogFiles() {
     }
   }
 
-  // 4. Sync from Questlog scene.json for current map and player position
-  const sceneFile = readJsonSafe(path.join(QUESTLOG_DIR, "scene.json"));
-  if (sceneFile && Array.isArray(sceneFile.messages)) {
-    const mapMsg = sceneFile.messages.find(m => m.type === "map");
-    if (mapMsg && mapMsg.map && state.sniffer.packetsDecoded === 0) {
-      updateMapAndArea(mapMsg.map);
-      changed = true;
+  // 4. Sync live inventory stacks from tickets.json for Crafting & Gathering Tracker
+  const ticketsFile = readJsonSafe(path.join(QUESTLOG_DIR, "tickets.json"));
+  if (ticketsFile && ticketsFile.characters) {
+    const targetCharKey = state.character.name
+      ? Object.keys(ticketsFile.characters).find(k => k.endsWith(":" + state.character.name))
+      : Object.keys(ticketsFile.characters)[0];
+    const charData = targetCharKey ? ticketsFile.characters[targetCharKey] : Object.values(ticketsFile.characters)[0];
+    if (charData && Array.isArray(charData.stacks)) {
+      const inv = {};
+      for (const st of charData.stacks) {
+        if (st.item && st.count) {
+          inv[st.item] = (inv[st.item] || 0) + Number(st.count);
+        }
+      }
+      state.inventory = inv;
     }
   }
 
-  // 5. Sync from Questlog self.json for self entity ID and nearby NPCs
-  const selfFile = readJsonSafe(path.join(QUESTLOG_DIR, "self.json"));
-  if (selfFile) {
-    if (selfFile.name && !state.character.name) state.character.name = selfFile.name;
-    if (selfFile.entity && state.selfEntity !== selfFile.entity) {
-      state.selfEntity = selfFile.entity;
-      changed = true;
-    }
-    const isFreshSelf = selfFile.seenAt && (Date.now() - selfFile.seenAt < 10000);
-    if (Array.isArray(selfFile.npcs) && (isFreshSelf || state.liveNpcs.size === 0)) {
-      const counts = {};
-      const aliveEntities = new Set();
-      for (const n of selfFile.npcs) {
-        if (n.npc) counts[n.npc] = (counts[n.npc] || 0) + 1;
-        if (n.entity) aliveEntities.add(n.entity);
-      }
-      if (isFreshSelf && state.liveNpcs.size > 0) {
-        for (const entId of state.liveNpcs.keys()) {
-          if (!aliveEntities.has(entId)) state.liveNpcs.delete(entId);
-        }
-      }
-      state.aroundCounts = counts;
-      changed = true;
+  // 5. Sync active session gathering & drops from loot-sessions/index.json
+  const lootSessions = readJsonSafe(path.join(QUESTLOG_DIR, "loot-sessions", "index.json"));
+  if (lootSessions && Array.isArray(lootSessions.entries) && lootSessions.entries.length > 0) {
+    const activeSession = lootSessions.entries[0];
+    if (activeSession) {
+      state.craftingSession = {
+        activeMs: activeSession.activeMs || 0,
+        startedAt: activeSession.startedAt || 0,
+        lastAt: activeSession.lastAt || 0,
+        items: activeSession.items || []
+      };
     }
   }
 
@@ -1693,6 +1745,8 @@ function buildOverlayPayload() {
     },
     worlds: db.worlds,
     recentEvents: state.recentEvents,
+    inventory: state.inventory || {},
+    craftingSession: state.craftingSession || null,
     pets: rows
   };
 }
