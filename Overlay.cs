@@ -33,6 +33,7 @@ namespace Aion2PetsOverlay
         public string Id { get; set; }
         public string NameHeb { get; set; }
         public string NameEng { get; set; }
+        public string NameRus { get; set; }
         public string Category { get; set; }
         public string Emoji { get; set; }
         public int GatherLevel { get; set; }
@@ -44,6 +45,13 @@ namespace Aion2PetsOverlay
         public CraftItem()
         {
             RecipeMats = new List<CraftRecipeMat>();
+        }
+
+        public string GetDisplayName(string lang)
+        {
+            if (lang == "ENG") return !string.IsNullOrEmpty(NameEng) ? NameEng : (NameHeb ?? "");
+            if (lang == "RUS") return !string.IsNullOrEmpty(NameRus) ? NameRus : (!string.IsNullOrEmpty(NameEng) ? NameEng : (NameHeb ?? ""));
+            return !string.IsNullOrEmpty(NameHeb) ? NameHeb : (NameEng ?? "");
         }
     }
 
@@ -240,6 +248,9 @@ namespace Aion2PetsOverlay
         private StackPanel _craftCardsStack;
         private TextBox _craftSearchBox;
         private Border _craftAddModal;
+        private TextBlock _craftAddModalTitle;
+        private Button _craftAddTargetBtn;
+        private WrapPanel _craftChipsWrap;
         private StackPanel _craftCatalogStack;
 
         public OverlayWindow()
@@ -316,58 +327,59 @@ namespace Aion2PetsOverlay
             _craftCatalog.Clear();
 
             // Herbs
-            _craftCatalog.Add(new CraftItem { Id = "610610013", NameHeb = "אנג'ליקה (Angelica)", NameEng = "Angelica", Category = "herb", Emoji = "🌿", GatherLevel = 1, BestMap = "Altgard / Verteron", BestArea = "Dredgion Crash Site" });
-            _craftCatalog.Add(new CraftItem { Id = "610610014", NameHeb = "לובודה (Lobuda)", NameEng = "Lobuda", Category = "herb", Emoji = "🌿", GatherLevel = 15, BestMap = "Altgard / Verteron", BestArea = "Basfelt Village" });
-            _craftCatalog.Add(new CraftItem { Id = "610610015", NameHeb = "קוניום (Conium)", NameEng = "Conium", Category = "herb", Emoji = "🌿", GatherLevel = 35, BestMap = "Altgard / Verteron", BestArea = "Gribade Crater" });
-            _craftCatalog.Add(new CraftItem { Id = "610610016", NameHeb = "טאנגה (Tange)", NameEng = "Tange", Category = "herb", Emoji = "🌿", GatherLevel = 65, BestMap = "Morheim / Eltnen", BestArea = "Morheim Snowfield" });
+            _craftCatalog.Add(new CraftItem { Id = "610610013", NameHeb = "אנג'ליקה", NameEng = "Angelica", NameRus = "Ангелика", Category = "herb", Emoji = "🌿", GatherLevel = 1, BestMap = "Altgard / Verteron", BestArea = "Dredgion Crash Site" });
+            _craftCatalog.Add(new CraftItem { Id = "610610014", NameHeb = "לובודה", NameEng = "Lobuda", NameRus = "Лобука", Category = "herb", Emoji = "🌿", GatherLevel = 15, BestMap = "Altgard / Verteron", BestArea = "Basfelt Village" });
+            _craftCatalog.Add(new CraftItem { Id = "610610015", NameHeb = "קוניום", NameEng = "Conium", NameRus = "Кониум", Category = "herb", Emoji = "🌿", GatherLevel = 35, BestMap = "Altgard / Verteron", BestArea = "Gribade Crater" });
+            _craftCatalog.Add(new CraftItem { Id = "610610016", NameHeb = "טאנגה", NameEng = "Tange", NameRus = "Танге", Category = "herb", Emoji = "🌿", GatherLevel = 65, BestMap = "Morheim / Eltnen", BestArea = "Morheim Snowfield" });
 
             // Ores
-            _craftCatalog.Add(new CraftItem { Id = "610650011", NameHeb = "עפרת ברזל (Iron Ore)", NameEng = "Iron Ore", Category = "ore", Emoji = "⛏️", GatherLevel = 1, BestMap = "Altgard / Verteron", BestArea = "Moslan Forest" });
-            _craftCatalog.Add(new CraftItem { Id = "610650012", NameHeb = "עפרת טיטניום (Titani Ore)", NameEng = "Titani Ore", Category = "ore", Emoji = "⛏️", GatherLevel = 25, BestMap = "Altgard / Verteron", BestArea = "Dredgion Crash Site" });
-            _craftCatalog.Add(new CraftItem { Id = "610650013", NameHeb = "אדמנטיום (Adamantium Ore)", NameEng = "Adamantium Ore", Category = "ore", Emoji = "⛏️", GatherLevel = 50, BestMap = "Altgard / Morheim", BestArea = "Altgard Ice Lake" });
-            _craftCatalog.Add(new CraftItem { Id = "610650014", NameHeb = "עפרת כסף (Silver Ore)", NameEng = "Silver Ore", Category = "ore", Emoji = "⛏️", GatherLevel = 75, BestMap = "Morheim / Eltnen", BestArea = "Salintus Desert" });
-            _craftCatalog.Add(new CraftItem { Id = "610650016", NameHeb = "עפרת זהב (Gold Ore)", NameEng = "Gold Ore", Category = "ore", Emoji = "⛏️", GatherLevel = 100, BestMap = "Morheim / Eltnen", BestArea = "Desert Fortress" });
-            _craftCatalog.Add(new CraftItem { Id = "610650018", NameHeb = "פלטינה (Platinum Ore)", NameEng = "Platinum Ore", Category = "ore", Emoji = "⛏️", GatherLevel = 150, BestMap = "Beluslan / Heiron", BestArea = "Beluslan Fortress" });
+            _craftCatalog.Add(new CraftItem { Id = "610650011", NameHeb = "עפרת ברזל", NameEng = "Iron Ore", NameRus = "Железная руда", Category = "ore", Emoji = "⛏️", GatherLevel = 1, BestMap = "Altgard / Verteron", BestArea = "Moslan Forest" });
+            _craftCatalog.Add(new CraftItem { Id = "610650012", NameHeb = "עפרת טיטניום", NameEng = "Titani Ore", NameRus = "Титановая руда", Category = "ore", Emoji = "⛏️", GatherLevel = 25, BestMap = "Altgard / Verteron", BestArea = "Dredgion Crash Site" });
+            _craftCatalog.Add(new CraftItem { Id = "610650013", NameHeb = "עפרת אדמנטיום", NameEng = "Adamantium Ore", NameRus = "Адамантитовая руда", Category = "ore", Emoji = "⛏️", GatherLevel = 50, BestMap = "Altgard / Morheim", BestArea = "Altgard Ice Lake" });
+            _craftCatalog.Add(new CraftItem { Id = "610650014", NameHeb = "עפרת כסף", NameEng = "Silver Ore", NameRus = "Серебряная руда", Category = "ore", Emoji = "⛏️", GatherLevel = 75, BestMap = "Morheim / Eltnen", BestArea = "Salintus Desert" });
+            _craftCatalog.Add(new CraftItem { Id = "610650016", NameHeb = "עפרת זהב", NameEng = "Gold Ore", NameRus = "Золотая руда", Category = "ore", Emoji = "⛏️", GatherLevel = 100, BestMap = "Morheim / Eltnen", BestArea = "Desert Fortress" });
+            _craftCatalog.Add(new CraftItem { Id = "610650018", NameHeb = "עפרת פלטינה", NameEng = "Platinum Ore", NameRus = "Платиновая руда", Category = "ore", Emoji = "⛏️", GatherLevel = 150, BestMap = "Beluslan / Heiron", BestArea = "Beluslan Fortress" });
 
             // Gems
-            _craftCatalog.Add(new CraftItem { Id = "610660025", NameHeb = "טופז (Topaz)", NameEng = "Topaz", Category = "gem", Emoji = "💎", GatherLevel = 15, BestMap = "Altgard / Verteron", BestArea = "Dredgion Crash Site" });
-            _craftCatalog.Add(new CraftItem { Id = "610660026", NameHeb = "טורקיז (Turquoise)", NameEng = "Turquoise", Category = "gem", Emoji = "💎", GatherLevel = 35, BestMap = "Altgard / Verteron", BestArea = "Gribade Crater" });
-            _craftCatalog.Add(new CraftItem { Id = "610660027", NameHeb = "אקוומרין (Aquamarine)", NameEng = "Aquamarine", Category = "gem", Emoji = "💎", GatherLevel = 60, BestMap = "Altgard / Morheim", BestArea = "Altgard Coast" });
-            _craftCatalog.Add(new CraftItem { Id = "610660028", NameHeb = "זירקון (Zircon)", NameEng = "Zircon", Category = "gem", Emoji = "💎", GatherLevel = 85, BestMap = "Morheim / Eltnen", BestArea = "Morheim Canyon" });
-            _craftCatalog.Add(new CraftItem { Id = "610660029", NameHeb = "גרנט (Garnet)", NameEng = "Garnet", Category = "gem", Emoji = "💎", GatherLevel = 110, BestMap = "Morheim / Eltnen", BestArea = "Red Lava Cliff" });
-            _craftCatalog.Add(new CraftItem { Id = "610660030", NameHeb = "אמטיסט (Amethyst)", NameEng = "Amethyst", Category = "gem", Emoji = "💎", GatherLevel = 135, BestMap = "Beluslan / Heiron", BestArea = "Kidorun Campsite" });
-            _craftCatalog.Add(new CraftItem { Id = "610660031", NameHeb = "אמרלד / ברקת (Emerald)", NameEng = "Emerald", Category = "gem", Emoji = "💎", GatherLevel = 160, BestMap = "Beluslan / Heiron", BestArea = "Anair Harbor" });
-            _craftCatalog.Add(new CraftItem { Id = "610660032", NameHeb = "אודם / רובי (Ruby)", NameEng = "Ruby", Category = "gem", Emoji = "💎", GatherLevel = 185, BestMap = "Beluslan / Heiron", BestArea = "Besfer Refugee Camp" });
-            _craftCatalog.Add(new CraftItem { Id = "610660033", NameHeb = "יהלום (Diamond)", NameEng = "Diamond", Category = "gem", Emoji = "💎", GatherLevel = 210, BestMap = "Reshanta (Abyss)", BestArea = "Core / Asteria" });
+            _craftCatalog.Add(new CraftItem { Id = "610660025", NameHeb = "טופז", NameEng = "Topaz", NameRus = "Топаз", Category = "gem", Emoji = "💎", GatherLevel = 15, BestMap = "Altgard / Verteron", BestArea = "Dredgion Crash Site" });
+            _craftCatalog.Add(new CraftItem { Id = "610660026", NameHeb = "טורקיז", NameEng = "Turquoise", NameRus = "Бирюза", Category = "gem", Emoji = "💎", GatherLevel = 35, BestMap = "Altgard / Verteron", BestArea = "Gribade Crater" });
+            _craftCatalog.Add(new CraftItem { Id = "610660027", NameHeb = "אקוומרין", NameEng = "Aquamarine", NameRus = "Аквамарин", Category = "gem", Emoji = "💎", GatherLevel = 60, BestMap = "Altgard / Morheim", BestArea = "Altgard Coast" });
+            _craftCatalog.Add(new CraftItem { Id = "610660028", NameHeb = "זירקון", NameEng = "Zircon", NameRus = "Циркон", Category = "gem", Emoji = "💎", GatherLevel = 85, BestMap = "Morheim / Eltnen", BestArea = "Morheim Canyon" });
+            _craftCatalog.Add(new CraftItem { Id = "610660029", NameHeb = "גרנט", NameEng = "Garnet", NameRus = "Гранат", Category = "gem", Emoji = "💎", GatherLevel = 110, BestMap = "Morheim / Eltnen", BestArea = "Red Lava Cliff" });
+            _craftCatalog.Add(new CraftItem { Id = "610660030", NameHeb = "אמטיסט", NameEng = "Amethyst", NameRus = "Аметист", Category = "gem", Emoji = "💎", GatherLevel = 135, BestMap = "Beluslan / Heiron", BestArea = "Kidorun Campsite" });
+            _craftCatalog.Add(new CraftItem { Id = "610660031", NameHeb = "אמרלד", NameEng = "Emerald", NameRus = "Изумруд", Category = "gem", Emoji = "💎", GatherLevel = 160, BestMap = "Beluslan / Heiron", BestArea = "Anair Harbor" });
+            _craftCatalog.Add(new CraftItem { Id = "610660032", NameHeb = "רובי", NameEng = "Ruby", NameRus = "Рубин", Category = "gem", Emoji = "💎", GatherLevel = 185, BestMap = "Beluslan / Heiron", BestArea = "Besfer Refugee Camp" });
+            _craftCatalog.Add(new CraftItem { Id = "610660033", NameHeb = "יהלום", NameEng = "Diamond", NameRus = "Алмаз", Category = "gem", Emoji = "💎", GatherLevel = 210, BestMap = "Reshanta (Abyss)", BestArea = "Core / Asteria" });
 
             // Aether
-            _craftCatalog.Add(new CraftItem { Id = "610670041", NameHeb = "חלקיק את'ר (Aether Particle)", NameEng = "Aether Particle", Category = "aether", Emoji = "✨", GatherLevel = 1, BestMap = "Altgard / Verteron", BestArea = "Fortress Sky" });
-            _craftCatalog.Add(new CraftItem { Id = "610670043", NameHeb = "קריסטל את'ר קטן (Small Aether)", NameEng = "Small Aether Crystal", Category = "aether", Emoji = "✨", GatherLevel = 25, BestMap = "Altgard / Verteron", BestArea = "Dredgion Sky" });
-            _craftCatalog.Add(new CraftItem { Id = "610670044", NameHeb = "קריסטל את'ר (Aether Crystal)", NameEng = "Regular Aether Crystal", Category = "aether", Emoji = "✨", GatherLevel = 50, BestMap = "Altgard / Morheim", BestArea = "Moslan Sky" });
-            _craftCatalog.Add(new CraftItem { Id = "610670047", NameHeb = "את'ר טהור (Pure Aether)", NameEng = "Pure Aether", Category = "aether", Emoji = "✨", GatherLevel = 75, BestMap = "Morheim / Eltnen", BestArea = "Morheim Sky" });
-            _craftCatalog.Add(new CraftItem { Id = "610670048", NameHeb = "את'ר נוצץ (Brilliant Aether)", NameEng = "Brilliant Aether", Category = "aether", Emoji = "✨", GatherLevel = 100, BestMap = "Morheim / Eltnen", BestArea = "Desert Sky" });
+            _craftCatalog.Add(new CraftItem { Id = "610670041", NameHeb = "חלקיק את'ר", NameEng = "Aether Particle", NameRus = "Частица эфира", Category = "aether", Emoji = "✨", GatherLevel = 1, BestMap = "Altgard / Verteron", BestArea = "Fortress Sky" });
+            _craftCatalog.Add(new CraftItem { Id = "610670043", NameHeb = "קריסטל את'ר קטן", NameEng = "Small Aether Crystal", NameRus = "Малый кристалл эфира", Category = "aether", Emoji = "✨", GatherLevel = 25, BestMap = "Altgard / Verteron", BestArea = "Dredgion Sky" });
+            _craftCatalog.Add(new CraftItem { Id = "610670044", NameHeb = "קריסטל את'ר", NameEng = "Regular Aether Crystal", NameRus = "Кристалл эфира", Category = "aether", Emoji = "✨", GatherLevel = 50, BestMap = "Altgard / Morheim", BestArea = "Moslan Sky" });
+            _craftCatalog.Add(new CraftItem { Id = "610670047", NameHeb = "את'ר טהור", NameEng = "Pure Aether", NameRus = "Чистый эфир", Category = "aether", Emoji = "✨", GatherLevel = 75, BestMap = "Morheim / Eltnen", BestArea = "Morheim Sky" });
+            _craftCatalog.Add(new CraftItem { Id = "610670048", NameHeb = "את'ר זוהר", NameEng = "Brilliant Aether", NameRus = "Сверкающий эфир", Category = "aether", Emoji = "✨", GatherLevel = 100, BestMap = "Morheim / Eltnen", BestArea = "Desert Sky" });
 
             // Wood
-            _craftCatalog.Add(new CraftItem { Id = "610620013", NameHeb = "עץ אסוואט (Asvat Wood)", NameEng = "Asvat Wood", Category = "wood", Emoji = "🪵", GatherLevel = 1, BestMap = "Altgard / Verteron", BestArea = "Moslan Forest" });
-            _craftCatalog.Add(new CraftItem { Id = "610620014", NameHeb = "עץ ערבה (Willow Wood)", NameEng = "Willow Wood", Category = "wood", Emoji = "🪵", GatherLevel = 25, BestMap = "Altgard / Verteron", BestArea = "Dredgion Crash Site" });
-            _craftCatalog.Add(new CraftItem { Id = "610620015", NameHeb = "עץ דוקו (Duku Wood)", NameEng = "Duku Wood", Category = "wood", Emoji = "🪵", GatherLevel = 55, BestMap = "Morheim / Eltnen", BestArea = "Morheim Valley" });
-            _craftCatalog.Add(new CraftItem { Id = "610620016", NameHeb = "עץ טיק (Teak Wood)", NameEng = "Teak Wood", Category = "wood", Emoji = "🪵", GatherLevel = 85, BestMap = "Beluslan / Heiron", BestArea = "Heiron Forest" });
+            _craftCatalog.Add(new CraftItem { Id = "610620013", NameHeb = "עץ אסוואט", NameEng = "Asvat Wood", NameRus = "Древесина асвата", Category = "wood", Emoji = "🪵", GatherLevel = 1, BestMap = "Altgard / Verteron", BestArea = "Moslan Forest" });
+            _craftCatalog.Add(new CraftItem { Id = "610620014", NameHeb = "עץ ערבה", NameEng = "Willow Wood", NameRus = "Древесина ивы", Category = "wood", Emoji = "🪵", GatherLevel = 25, BestMap = "Altgard / Verteron", BestArea = "Dredgion Crash Site" });
+            _craftCatalog.Add(new CraftItem { Id = "610620015", NameHeb = "עץ דוקו", NameEng = "Duku Wood", NameRus = "Древесина дуку", Category = "wood", Emoji = "🪵", GatherLevel = 55, BestMap = "Morheim / Eltnen", BestArea = "Morheim Valley" });
+            _craftCatalog.Add(new CraftItem { Id = "610620016", NameHeb = "עץ טיק", NameEng = "Teak Wood", NameRus = "Тиковое дерево", Category = "wood", Emoji = "🪵", GatherLevel = 85, BestMap = "Beluslan / Heiron", BestArea = "Heiron Forest" });
 
             // Crystals
-            _craftCatalog.Add(new CraftItem { Id = "610680045", NameHeb = "קריסטל רוח (Wind Crystal)", NameEng = "Wind Crystal", Category = "crystal", Emoji = "🔮", GatherLevel = 1, BestMap = "All Worlds", BestArea = "Elemental Spawns" });
-            _craftCatalog.Add(new CraftItem { Id = "610680047", NameHeb = "קריסטל מים (Water Crystal)", NameEng = "Water Crystal", Category = "crystal", Emoji = "🔮", GatherLevel = 1, BestMap = "All Worlds", BestArea = "Elemental Spawns" });
-            _craftCatalog.Add(new CraftItem { Id = "610680049", NameHeb = "קריסטל אדמה (Earth Crystal)", NameEng = "Earth Crystal", Category = "crystal", Emoji = "🔮", GatherLevel = 1, BestMap = "All Worlds", BestArea = "Elemental Spawns" });
-            _craftCatalog.Add(new CraftItem { Id = "610680050", NameHeb = "קריסטל אש (Fire Crystal)", NameEng = "Fire Crystal", Category = "crystal", Emoji = "🔮", GatherLevel = 1, BestMap = "All Worlds", BestArea = "Elemental Spawns" });
-            _craftCatalog.Add(new CraftItem { Id = "610680051", NameHeb = "אבן אלמנטלית מובחרת", NameEng = "Greater Elemental Stone", Category = "crystal", Emoji = "🔮", GatherLevel = 25, BestMap = "All Worlds", BestArea = "Refine / Gathering" });
-            _craftCatalog.Add(new CraftItem { Id = "610680053", NameHeb = "תמצית אלמנט טהורה", NameEng = "Pure Elemental Essence", Category = "crystal", Emoji = "🔮", GatherLevel = 50, BestMap = "Morheim / Eltnen", BestArea = "Refine / Craft" });
-            _craftCatalog.Add(new CraftItem { Id = "610680054", NameHeb = "קריסטל כאוס (Chaos Crystal)", NameEng = "Chaos Crystal", Category = "crystal", Emoji = "🔮", GatherLevel = 75, BestMap = "Abyss / Beluslan", BestArea = "Chaos Rifts" });
+            _craftCatalog.Add(new CraftItem { Id = "610680045", NameHeb = "קריסטל רוח", NameEng = "Wind Crystal", NameRus = "Кристалл ветра", Category = "crystal", Emoji = "🔮", GatherLevel = 1, BestMap = "All Worlds", BestArea = "Elemental Spawns" });
+            _craftCatalog.Add(new CraftItem { Id = "610680047", NameHeb = "קריסטל מים", NameEng = "Water Crystal", NameRus = "Кристалл воды", Category = "crystal", Emoji = "🔮", GatherLevel = 1, BestMap = "All Worlds", BestArea = "Elemental Spawns" });
+            _craftCatalog.Add(new CraftItem { Id = "610680049", NameHeb = "קריסטל אדמה", NameEng = "Earth Crystal", NameRus = "Кристалл земли", Category = "crystal", Emoji = "🔮", GatherLevel = 1, BestMap = "All Worlds", BestArea = "Elemental Spawns" });
+            _craftCatalog.Add(new CraftItem { Id = "610680050", NameHeb = "קריסטל אש", NameEng = "Fire Crystal", NameRus = "Кристалл огня", Category = "crystal", Emoji = "🔮", GatherLevel = 1, BestMap = "All Worlds", BestArea = "Elemental Spawns" });
+            _craftCatalog.Add(new CraftItem { Id = "610680051", NameHeb = "אבן אלמנטלית מובחרת", NameEng = "Greater Elemental Stone", NameRus = "Камень высших стихий", Category = "crystal", Emoji = "🔮", GatherLevel = 25, BestMap = "All Worlds", BestArea = "Refine / Gathering" });
+            _craftCatalog.Add(new CraftItem { Id = "610680053", NameHeb = "תמצית אלמנט טהורה", NameEng = "Pure Elemental Essence", NameRus = "Эссенция чистых стихий", Category = "crystal", Emoji = "🔮", GatherLevel = 50, BestMap = "Morheim / Eltnen", BestArea = "Refine / Craft" });
+            _craftCatalog.Add(new CraftItem { Id = "610680054", NameHeb = "קריסטל כאוס", NameEng = "Chaos Crystal", NameRus = "Кристалл хаоса", Category = "crystal", Emoji = "🔮", GatherLevel = 75, BestMap = "Abyss / Beluslan", BestArea = "Chaos Rifts" });
 
             // Crafting Recipes
             var pLife = new CraftItem
             {
                 Id = "530116001",
-                NameHeb = "שיקוי חיים מובחר (Major Life Potion)",
+                NameHeb = "שיקוי חיים מובחר",
                 NameEng = "Major Life Potion",
+                NameRus = "Большое зелье жизни",
                 Category = "potion",
                 Emoji = "🧪",
                 IsRecipe = true,
@@ -382,8 +394,9 @@ namespace Aion2PetsOverlay
             var pMana = new CraftItem
             {
                 Id = "530116005",
-                NameHeb = "שיקוי מאנה מובחר (Major Mana Potion)",
+                NameHeb = "שיקוי מאנה מובחר",
                 NameEng = "Major Mana Potion",
+                NameRus = "Большое зелье маны",
                 Category = "potion",
                 Emoji = "🧪",
                 IsRecipe = true,
@@ -398,8 +411,9 @@ namespace Aion2PetsOverlay
             var pSerum = new CraftItem
             {
                 Id = "530116006",
-                NameHeb = "סרום התאוששות כפול (Major Recovery Serum)",
+                NameHeb = "סרום התאוששות כפול",
                 NameEng = "Major Recovery Serum",
+                NameRus = "Большая сыворотка восстановления",
                 Category = "potion",
                 Emoji = "🧪",
                 IsRecipe = true,
@@ -414,8 +428,9 @@ namespace Aion2PetsOverlay
             var pGreatLife = new CraftItem
             {
                 Id = "530126003",
-                NameHeb = "שיקוי חיים עליון (Greater Life Potion)",
+                NameHeb = "שיקוי חיים עליון",
                 NameEng = "Greater Life Potion",
+                NameRus = "Элитное зелье жизни",
                 Category = "potion",
                 Emoji = "🧪",
                 IsRecipe = true,
@@ -430,8 +445,9 @@ namespace Aion2PetsOverlay
             var pGreatSerum = new CraftItem
             {
                 Id = "530126005",
-                NameHeb = "סרום התאוששות עליון (Greater Recovery Serum)",
+                NameHeb = "סרום התאוששות עליון",
                 NameEng = "Greater Recovery Serum",
+                NameRus = "Элитная сыворотка восстановления",
                 Category = "potion",
                 Emoji = "🧪",
                 IsRecipe = true,
@@ -649,6 +665,16 @@ namespace Aion2PetsOverlay
 
             _viewPetsBtn.Content = Tr("🐾 חיות (Pets)", "🐾 Pets", "🐾 Питомцы");
             _viewCraftBtn.Content = Tr("⚒️ איסוף וקראפטינג (Crafting)", "⚒️ Crafting", "⚒️ Сбор и крафт");
+
+            if (_craftAddTargetBtn != null)
+                _craftAddTargetBtn.Content = Tr("+ הוסף חומר / מתכון ליעד", "+ Add Craft / Material Goal", "+ Добавить цель крафта");
+            if (_craftAddModalTitle != null)
+                _craftAddModalTitle.Text = Tr("בחר חומר גלם או מתכון להוספה ליעדים:", "Pick material or recipe to track:", "Выберите ресурс для отслеживания:");
+            if (_craftSearchBox != null)
+                _craftSearchBox.ToolTip = Tr("חיפוש לפי שם פריט או אזור...", "Search by item name or zone...", "Поиск по названию или локации...");
+            RefreshCraftCategoryChips();
+            if (_craftAddModal != null && _craftAddModal.Visibility == Visibility.Visible)
+                RefreshCraftCatalogModal();
         }
 
         private void StartSnifferBackend()
@@ -1255,7 +1281,7 @@ namespace Aion2PetsOverlay
             // 0. Top Bar of Crafting
             DockPanel craftTop = new DockPanel { Margin = new Thickness(0, 0, 0, 6) };
 
-            Button addTargetBtn = new Button
+            _craftAddTargetBtn = new Button
             {
                 Content = Tr("+ הוסף חומר / מתכון ליעד", "+ Add Craft / Material Goal", "+ Добавить цель крафта"),
                 Height = 24,
@@ -1268,13 +1294,13 @@ namespace Aion2PetsOverlay
                 FontSize = 11,
                 Cursor = Cursors.Hand
             };
-            addTargetBtn.Click += (s, e) =>
+            _craftAddTargetBtn.Click += (s, e) =>
             {
                 _craftAddModal.Visibility = (_craftAddModal.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
                 RefreshCraftCatalogModal();
             };
-            DockPanel.SetDock(addTargetBtn, Dock.Left);
-            craftTop.Children.Add(addTargetBtn);
+            DockPanel.SetDock(_craftAddTargetBtn, Dock.Left);
+            craftTop.Children.Add(_craftAddTargetBtn);
 
             _craftSummaryText = new TextBlock
             {
@@ -1289,17 +1315,10 @@ namespace Aion2PetsOverlay
             g.Children.Add(craftTop);
 
             // 1. Category Filter Chips
-            WrapPanel chipsWrap = new WrapPanel { Margin = new Thickness(0, 0, 0, 6) };
-            chipsWrap.Children.Add(CreateCraftChip("🌟 הכל", "all"));
-            chipsWrap.Children.Add(CreateCraftChip("🌿 צמחים", "herb"));
-            chipsWrap.Children.Add(CreateCraftChip("⛏️ עפרות", "ore"));
-            chipsWrap.Children.Add(CreateCraftChip("💎 אבני חן", "gem"));
-            chipsWrap.Children.Add(CreateCraftChip("✨ את'ר", "aether"));
-            chipsWrap.Children.Add(CreateCraftChip("🪵 עץ", "wood"));
-            chipsWrap.Children.Add(CreateCraftChip("🔮 קריסטלים", "crystal"));
-            chipsWrap.Children.Add(CreateCraftChip("🧪 שיקויים", "potion"));
-            Grid.SetRow(chipsWrap, 1);
-            g.Children.Add(chipsWrap);
+            _craftChipsWrap = new WrapPanel { Margin = new Thickness(0, 0, 0, 6) };
+            RefreshCraftCategoryChips();
+            Grid.SetRow(_craftChipsWrap, 1);
+            g.Children.Add(_craftChipsWrap);
 
             // 2. Body Grid with Cards + Add Modal
             Grid bodyArea = new Grid();
@@ -1330,7 +1349,7 @@ namespace Aion2PetsOverlay
             DockPanel.SetDock(closeModalBtn, Dock.Left);
             modalHeader.Children.Add(closeModalBtn);
 
-            TextBlock modalTitle = new TextBlock
+            _craftAddModalTitle = new TextBlock
             {
                 Text = Tr("בחר חומר גלם או מתכון להוספה ליעדים:", "Pick material or recipe to track:", "Выберите ресурс для отслеживания:"),
                 Foreground = Brushes.White,
@@ -1338,7 +1357,7 @@ namespace Aion2PetsOverlay
                 FontSize = 11.5,
                 VerticalAlignment = VerticalAlignment.Center
             };
-            modalHeader.Children.Add(modalTitle);
+            modalHeader.Children.Add(_craftAddModalTitle);
             DockPanel.SetDock(modalHeader, Dock.Top);
             modalDock.Children.Add(modalHeader);
 
@@ -1351,7 +1370,8 @@ namespace Aion2PetsOverlay
                 VerticalContentAlignment = VerticalAlignment.Center,
                 FontSize = 11,
                 Padding = new Thickness(5, 0, 5, 0),
-                Margin = new Thickness(0, 0, 0, 6)
+                Margin = new Thickness(0, 0, 0, 6),
+                ToolTip = Tr("חיפוש לפי שם פריט או אזור...", "Search by item name or zone...", "Поиск по названию или локации...")
             };
             _craftSearchBox.TextChanged += (s, e) => RefreshCraftCatalogModal();
             DockPanel.SetDock(_craftSearchBox, Dock.Top);
@@ -1371,6 +1391,20 @@ namespace Aion2PetsOverlay
             return g;
         }
 
+        private void RefreshCraftCategoryChips()
+        {
+            if (_craftChipsWrap == null) return;
+            _craftChipsWrap.Children.Clear();
+            _craftChipsWrap.Children.Add(CreateCraftChip(Tr("🌟 הכל", "🌟 All", "🌟 Все"), "all"));
+            _craftChipsWrap.Children.Add(CreateCraftChip(Tr("🌿 צמחים", "🌿 Herbs", "🌿 Травы"), "herb"));
+            _craftChipsWrap.Children.Add(CreateCraftChip(Tr("⛏️ עפרות", "⛏️ Ores", "⛏️ Руда"), "ore"));
+            _craftChipsWrap.Children.Add(CreateCraftChip(Tr("💎 אבני חן", "💎 Gems", "💎 Самоцветы"), "gem"));
+            _craftChipsWrap.Children.Add(CreateCraftChip(Tr("✨ את'ר", "✨ Aether", "✨ Эфир"), "aether"));
+            _craftChipsWrap.Children.Add(CreateCraftChip(Tr("🪵 עץ", "🪵 Wood", "🪵 Дерево"), "wood"));
+            _craftChipsWrap.Children.Add(CreateCraftChip(Tr("🔮 קריסטלים", "🔮 Crystals", "🔮 Кристаллы"), "crystal"));
+            _craftChipsWrap.Children.Add(CreateCraftChip(Tr("🧪 שיקויים", "🧪 Potions", "🧪 Зелья"), "potion"));
+        }
+
         private Button CreateCraftChip(string text, string catKey)
         {
             Button btn = new Button
@@ -1382,17 +1416,15 @@ namespace Aion2PetsOverlay
                 FontSize = 10.5,
                 Cursor = Cursors.Hand
             };
-            Action updateVisual = () =>
-            {
-                bool active = (_craftCategoryFilter == catKey);
-                btn.Background = active ? new SolidColorBrush(Color.FromArgb(80, 56, 189, 248)) : new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
-                btn.Foreground = active ? new SolidColorBrush(Color.FromRgb(56, 189, 248)) : new SolidColorBrush(Color.FromRgb(148, 163, 184));
-                btn.BorderBrush = active ? new SolidColorBrush(Color.FromRgb(56, 189, 248)) : Brushes.Transparent;
-            };
-            updateVisual();
+            bool active = (_craftCategoryFilter == catKey);
+            btn.Background = active ? new SolidColorBrush(Color.FromArgb(80, 56, 189, 248)) : new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
+            btn.Foreground = active ? new SolidColorBrush(Color.FromRgb(56, 189, 248)) : new SolidColorBrush(Color.FromRgb(148, 163, 184));
+            btn.BorderBrush = active ? new SolidColorBrush(Color.FromRgb(56, 189, 248)) : Brushes.Transparent;
+
             btn.Click += (s, e) =>
             {
                 _craftCategoryFilter = catKey;
+                RefreshCraftCategoryChips();
                 RefreshCraftingView();
             };
             return btn;
@@ -1405,7 +1437,7 @@ namespace Aion2PetsOverlay
 
             foreach (var item in _craftCatalog)
             {
-                string match = (item.NameHeb + " " + item.NameEng + " " + item.BestArea + " " + item.BestMap).ToLowerInvariant();
+                string match = (item.NameHeb + " " + item.NameEng + " " + item.NameRus + " " + item.BestArea + " " + item.BestMap).ToLowerInvariant();
                 if (!string.IsNullOrEmpty(q) && !match.Contains(q)) continue;
 
                 Border row = new Border
@@ -1444,14 +1476,14 @@ namespace Aion2PetsOverlay
                 StackPanel info = new StackPanel();
                 TextBlock nameTb = new TextBlock
                 {
-                    Text = item.Emoji + " " + (_lang == "ENG" ? item.NameEng : item.NameHeb),
+                    Text = item.Emoji + " " + item.GetDisplayName(_lang),
                     Foreground = Brushes.White,
                     FontWeight = FontWeights.Bold,
                     FontSize = 11.5
                 };
                 TextBlock locTb = new TextBlock
                 {
-                    Text = string.Format(Tr("📍 {0} · {1} (דרישה: רמה {2})", "📍 {0} · {1} (Req: Lv.{2})", "📍 {0} · {1} (Ур.{2})"), item.BestMap, item.BestArea, item.GatherLevel),
+                    Text = string.Format(Tr("📍 {0} · {1} (דרישה: רמה {2})", "📍 {0} · {1} (Req: Lv.{2})", "📍 {0} · {1} (Треб: Ур.{2})"), item.BestMap, item.BestArea, item.GatherLevel),
                     Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184)),
                     FontSize = 10
                 };
@@ -2766,6 +2798,7 @@ namespace Aion2PetsOverlay
                         Id = wish.ItemId,
                         NameHeb = "חפץ #" + wish.ItemId,
                         NameEng = "Item #" + wish.ItemId,
+                        NameRus = "Предмет #" + wish.ItemId,
                         Category = "other",
                         Emoji = "📦",
                         BestMap = "World Drop",
@@ -2822,7 +2855,7 @@ namespace Aion2PetsOverlay
 
                 TextBlock titleTb = new TextBlock
                 {
-                    Text = info.Emoji + " " + (_lang == "ENG" ? info.NameEng : info.NameHeb),
+                    Text = info.Emoji + " " + info.GetDisplayName(_lang),
                     Foreground = isReady ? new SolidColorBrush(Color.FromRgb(52, 211, 153)) : Brushes.White,
                     FontWeight = FontWeights.Bold,
                     FontSize = 12.5,
@@ -2887,6 +2920,9 @@ namespace Aion2PetsOverlay
                         int currentMatHave = inventory.ContainsKey(m.ItemId) ? inventory[m.ItemId] : 0;
                         bool matReady = (currentMatHave >= reqTotal);
 
+                        var matInfo = _craftCatalog.Find(c => c.Id == m.ItemId);
+                        string matDisplayName = (matInfo != null) ? matInfo.GetDisplayName(_lang) : m.Name;
+
                         Border matPill = new Border
                         {
                             Background = matReady ? new SolidColorBrush(Color.FromArgb(80, 16, 185, 129)) : new SolidColorBrush(Color.FromArgb(50, 255, 255, 255)),
@@ -2896,7 +2932,7 @@ namespace Aion2PetsOverlay
                         };
                         matPill.Child = new TextBlock
                         {
-                            Text = string.Format("{0}: {1}/{2} {3}", m.Name, currentMatHave, reqTotal, matReady ? "✔" : ""),
+                            Text = string.Format("{0}: {1}/{2} {3}", matDisplayName, currentMatHave, reqTotal, matReady ? "✔" : ""),
                             Foreground = matReady ? new SolidColorBrush(Color.FromRgb(52, 211, 153)) : new SolidColorBrush(Color.FromRgb(203, 213, 225)),
                             FontSize = 9.5,
                             FontWeight = FontWeights.SemiBold
@@ -2923,7 +2959,7 @@ namespace Aion2PetsOverlay
 
                 TextBlock guideTb = new TextBlock
                 {
-                    Text = string.Format(Tr("📍 {0} ({1}) · דרישה: רמה {2}", "📍 {0} ({1}) · Req Lv.{2}", "📍 {0} ({1}) · Ур.{2}"), info.BestMap, info.BestArea, info.GatherLevel),
+                    Text = string.Format(Tr("📍 {0} ({1}) · דרישה: רמה {2}", "📍 {0} ({1}) · Req Lv.{2}", "📍 {0} ({1}) · Треб: Ур.{2}"), info.BestMap, info.BestArea, info.GatherLevel),
                     Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184)),
                     FontSize = 9.5
                 };
@@ -2932,6 +2968,39 @@ namespace Aion2PetsOverlay
 
                 card.Child = cardStack;
                 _craftCardsStack.Children.Add(card);
+            }
+
+            if (totalTracked == 0)
+            {
+                Border emptyCard = new Border
+                {
+                    Background = new SolidColorBrush(Color.FromArgb(90, 15, 23, 42)),
+                    BorderBrush = new SolidColorBrush(Color.FromArgb(50, 56, 189, 248)),
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(8),
+                    Padding = new Thickness(14, 12, 14, 12),
+                    Margin = new Thickness(0, 10, 0, 10)
+                };
+                StackPanel emptySp = new StackPanel();
+                emptySp.Children.Add(new TextBlock
+                {
+                    Text = Tr("🌱 אין יעדי איסוף או ייצור כרגע", "🌱 No tracking goals yet", "🌱 Нет активных целей"),
+                    Foreground = Brushes.White,
+                    FontWeight = FontWeights.Bold,
+                    FontSize = 12,
+                    Margin = new Thickness(0, 0, 0, 4)
+                });
+                emptySp.Children.Add(new TextBlock
+                {
+                    Text = Tr("לחץ על כפתור '+ הוסף חומר / מתכון ליעד' למעלה כדי לבחור צמחים, עפרות, שיקויים או ציוד לעקוב אחריהם בזמן אמת!",
+                             "Click '+ Add Craft / Material Goal' above to pick herbs, ores, potions or gear to track live!",
+                             "Нажмите кнопку '+ Добавить цель крафта' вверху, чтобы выбрать ресурсы или рецепты для отслеживания!"),
+                    Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184)),
+                    FontSize = 10.5,
+                    TextWrapping = TextWrapping.Wrap
+                });
+                emptyCard.Child = emptySp;
+                _craftCardsStack.Children.Add(emptyCard);
             }
 
             _craftSummaryText.Text = string.Format(
