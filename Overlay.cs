@@ -189,7 +189,12 @@ namespace Aion2PetsOverlay
         private CheckBox _cbModCrafting;
         private CheckBox _cbModCombatFuture;
 
-        // Language Checkboxes
+        // Language Buttons (Top Header)
+        private Button _btnLangHeb;
+        private Button _btnLangEng;
+        private Button _btnLangRus;
+
+        // Language Checkboxes (Options Panel)
         private TextBlock _langLabelText;
         private CheckBox _cbLangHeb;
         private CheckBox _cbLangEng;
@@ -565,9 +570,10 @@ namespace Aion2PetsOverlay
             _updatingLangChecks = true;
             try
             {
-                _cbLangHeb.IsChecked = (_lang == "HEB");
-                _cbLangEng.IsChecked = (_lang == "ENG");
-                _cbLangRus.IsChecked = (_lang == "RUS");
+                if (_cbLangHeb != null) _cbLangHeb.IsChecked = (_lang == "HEB");
+                if (_cbLangEng != null) _cbLangEng.IsChecked = (_lang == "ENG");
+                if (_cbLangRus != null) _cbLangRus.IsChecked = (_lang == "RUS");
+                UpdateLangButtonsVisual();
                 FlowDirection = (_lang == "HEB") ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
                 ApplyLanguageToStaticUI();
                 RefreshView();
@@ -577,6 +583,48 @@ namespace Aion2PetsOverlay
                 _updatingLangChecks = false;
             }
             SaveSettings();
+        }
+
+        private Button CreateLangHeaderBtn(string label, string langKey)
+        {
+            Button b = new Button
+            {
+                Content = label,
+                Height = 22,
+                Padding = new Thickness(6, 0, 6, 0),
+                Margin = new Thickness(1, 0, 1, 0),
+                FontSize = 10.5,
+                FontWeight = FontWeights.Bold,
+                BorderThickness = new Thickness(1),
+                Cursor = Cursors.Hand
+            };
+            ApplyLangBtnStyle(b, _lang == langKey);
+            b.Click += (s, e) => SetLanguage(langKey);
+            return b;
+        }
+
+        private void UpdateLangButtonsVisual()
+        {
+            if (_btnLangHeb != null) ApplyLangBtnStyle(_btnLangHeb, _lang == "HEB");
+            if (_btnLangEng != null) ApplyLangBtnStyle(_btnLangEng, _lang == "ENG");
+            if (_btnLangRus != null) ApplyLangBtnStyle(_btnLangRus, _lang == "RUS");
+        }
+
+        private static void ApplyLangBtnStyle(Button b, bool active)
+        {
+            if (b == null) return;
+            if (active)
+            {
+                b.Background = new SolidColorBrush(Color.FromArgb(90, 56, 189, 248));
+                b.Foreground = new SolidColorBrush(Color.FromRgb(56, 189, 248));
+                b.BorderBrush = new SolidColorBrush(Color.FromRgb(56, 189, 248));
+            }
+            else
+            {
+                b.Background = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
+                b.Foreground = new SolidColorBrush(Color.FromRgb(148, 163, 184));
+                b.BorderBrush = Brushes.Transparent;
+            }
         }
 
         private void ApplyLanguageToStaticUI()
@@ -786,6 +834,13 @@ namespace Aion2PetsOverlay
                 SaveSettings();
             };
             actionBtns.Children.Add(_hubBtn);
+
+            _btnLangHeb = CreateLangHeaderBtn("עב", "HEB");
+            _btnLangEng = CreateLangHeaderBtn("EN", "ENG");
+            _btnLangRus = CreateLangHeaderBtn("RU", "RUS");
+            actionBtns.Children.Add(_btnLangHeb);
+            actionBtns.Children.Add(_btnLangEng);
+            actionBtns.Children.Add(_btnLangRus);
 
             _gearBtn = CreateIconBtn("⚙", () =>
             {
