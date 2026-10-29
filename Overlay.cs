@@ -244,9 +244,12 @@ namespace Aion2PetsOverlay
         private double? _prevPlayerY;
         private bool _compassRotateMode = true;
         private bool _showCubes = true;
+        private bool _showLevelGuide = true;
         private bool _showAllMonsters = true;
         private readonly string _chestsFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "chests-db.json");
         private Dictionary<string, object> _chestsDb = null;
+        private readonly string _areaLevelsFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "area-levels.json");
+        private Dictionary<string, object> _areaLevelsDb = null;
 
         private void LoadChestsDb()
         {
@@ -260,6 +263,32 @@ namespace Aion2PetsOverlay
                 }
             }
             catch { }
+        }
+
+        private void LoadAreaLevelsDb()
+        {
+            try
+            {
+                if (File.Exists(_areaLevelsFilePath))
+                {
+                    string json = File.ReadAllText(_areaLevelsFilePath, Encoding.UTF8);
+                    JavaScriptSerializer ser = new JavaScriptSerializer { MaxJsonLength = 50000000 };
+                    _areaLevelsDb = ser.Deserialize<Dictionary<string, object>>(json);
+                }
+            }
+            catch { }
+        }
+
+        private static Color GetGenusColor(string genus)
+        {
+            if (string.IsNullOrEmpty(genus)) return Color.FromRgb(56, 189, 248);
+            string g = genus.ToLowerInvariant().Trim();
+            if (g.Contains("feral")) return Color.FromRgb(249, 115, 22);     // Amber / Vibrant Orange (#F97316)
+            if (g.Contains("intellect")) return Color.FromRgb(96, 165, 250); // Sky Blue (#60A5FA)
+            if (g.Contains("nature")) return Color.FromRgb(74, 222, 128);    // Emerald Green (#4ADE80)
+            if (g.Contains("trans")) return Color.FromRgb(192, 132, 252);    // Purple / Violet (#C084FC)
+            if (g.Contains("special")) return Color.FromRgb(250, 204, 21);   // Gold / Yellow (#FACC15)
+            return Color.FromRgb(56, 189, 248);
         }
 
         // Cards List
@@ -293,6 +322,7 @@ namespace Aion2PetsOverlay
 
             try { if (!Directory.Exists(_iconsDir)) Directory.CreateDirectory(_iconsDir); } catch { }
             LoadChestsDb();
+            LoadAreaLevelsDb();
 
             Title = "Aion 2 Overlay Hub";
             Width = 460;
@@ -1269,6 +1299,13 @@ namespace Aion2PetsOverlay
             });
             btnCubes.ToolTip = Tr("הצג/הסתר קוביות", "Show/Hide Cubes", "Показать сундуки");
 
+            Button btnLevelGuide = CreateSmallMapBtn(_showLevelGuide ? "🏷️" : "🏷️", () =>
+            {
+                _showLevelGuide = !_showLevelGuide;
+                RenderMiniMap();
+            });
+            btnLevelGuide.ToolTip = Tr("מדריך רמות מובים (Level Guide)", "Area Mob Level Guide", "Гид по уровням зон");
+
             Button btnMonsters = CreateSmallMapBtn(_showAllMonsters ? "🐾" : "👁", () =>
             {
                 _showAllMonsters = !_showAllMonsters;
@@ -1282,6 +1319,7 @@ namespace Aion2PetsOverlay
             Button btnExpand = CreateSmallMapBtn("⤢", () => { _miniMapBorder.Height = (_miniMapBorder.Height <= 190) ? 330 : 180; });
             zoomBtns.Children.Add(btnCompass);
             zoomBtns.Children.Add(btnCubes);
+            zoomBtns.Children.Add(btnLevelGuide);
             zoomBtns.Children.Add(btnMonsters);
             zoomBtns.Children.Add(btnZoomIn);
             zoomBtns.Children.Add(btnZoomOut);
@@ -2218,6 +2256,7 @@ namespace Aion2PetsOverlay
                                 cl["petId"] = rPetId;
                                 cl["petName"] = GetStr(r, "name", "");
                                 cl["monsterName"] = GetStr(r, "primaryMonsterName", "");
+                                cl["genus"] = GetStr(r, "genus", "");
                                 cl["x"] = sx / spList.Count;
                                 cl["y"] = sy / spList.Count;
                                 cl["count"] = spList.Count;
@@ -2238,6 +2277,7 @@ namespace Aion2PetsOverlay
                                         sEntry["y"] = GetDouble(sp, "y", 0);
                                         sEntry["petId"] = rPetId;
                                         sEntry["name"] = GetStr(r, "primaryMonsterName", "");
+                                        sEntry["genus"] = GetStr(r, "genus", "");
                                         sEntry["isLevel3"] = GetBool(r, "isLevel3", false);
                                         miniMapSpawns.Add(sEntry);
                                     }
@@ -2776,7 +2816,15 @@ namespace Aion2PetsOverlay
             nameRow.Children.Add(nameTbCenter);
             centerStack.Children.Add(nameRow);
 
-            // Diamonds & Souls Row
+            // Diamonds, Genus Badge & Souls Row
+            string genus = GetStr(p, "genus", "");
+            if (string.IsNullOrEmpty(genus) && petId > 0)
+            {
+                var pData = FindPetInDb(petId);
+                if (pData != null) genus = GetStr(pData, "genus", "");
+            }
+            Color stoneColor = GetGenusColor(genus);
+
             DockPanel subRow = new DockPanel { Margin = new Thickness(0, 2, 0, 4) };
             if (_optShowDiamonds)
             {
@@ -2792,6 +2840,30 @@ namespace Aion2PetsOverlay
                 subRow.Children.Add(diaTb);
             }
 
+            if (!string.IsNullOrEmpty(genus))
+            {
+                Border genusBadge = new Border
+                {
+                    Background = new SolidColorBrush(Color.FromArgb(55, stoneColor.R, stoneColor.G, stoneColor.B)),
+                    BorderBrush = new SolidColorBrush(stoneColor),
+                    BorderThickness = new Thickness(0.8),
+                    CornerRadius = new CornerRadius(3),
+                    Padding = new Thickness(4, 0.5, 4, 0.5),
+                    Margin = new Thickness(6, 0, 0, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    ToolTip = Tr("אבן נשמה: " + genus, "Soul Stone: " + genus, "Камень души: " + genus)
+                };
+                genusBadge.Child = new TextBlock
+                {
+                    Text = genus.ToUpperInvariant(),
+                    Foreground = new SolidColorBrush(stoneColor),
+                    FontSize = 8.5,
+                    FontWeight = FontWeights.Bold
+                };
+                DockPanel.SetDock(genusBadge, Dock.Left);
+                subRow.Children.Add(genusBadge);
+            }
+
             string stepLabel = isLv3 ? "Lv.3 Complete" : soulsInStep + "/" + nextNeed;
             TextBlock stepTb = new TextBlock
             {
@@ -2803,22 +2875,22 @@ namespace Aion2PetsOverlay
             subRow.Children.Add(stepTb);
             centerStack.Children.Add(subRow);
 
-            // Progress Bar
+            // Progress Bar colored by dropped Soul Stone (Genus)
             Border progTrack = new Border
             {
-                Height = 4.5,
-                Background = new SolidColorBrush(Color.FromArgb(120, 15, 23, 42)),
-                CornerRadius = new CornerRadius(2),
+                Height = 5.0,
+                Background = new SolidColorBrush(Color.FromArgb(140, 15, 23, 42)),
+                CornerRadius = new CornerRadius(2.5),
                 ClipToBounds = true
             };
             Grid progGrid = new Grid();
             Border progFill = new Border
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
-                CornerRadius = new CornerRadius(2),
+                CornerRadius = new CornerRadius(2.5),
                 Background = isLv3
                     ? new SolidColorBrush(Color.FromRgb(52, 211, 153))
-                    : new SolidColorBrush(Color.FromRgb(56, 189, 248))
+                    : new SolidColorBrush(stoneColor)
             };
             progFill.Width = Math.Max(0, Math.Min(1.0, fillRatio)) * 260.0;
             progGrid.Children.Add(progFill);
@@ -3192,24 +3264,39 @@ namespace Aion2PetsOverlay
 
             double baseScale = 0.0045;
             double scale = baseScale * _mapZoom;
+
+            // Persistent heading tracker (never snaps back to 0 on stop)
+            if (mm.ContainsKey("playerHeading") && mm["playerHeading"] != null)
+            {
+                double hVal = GetDouble(mm, "playerHeading", -999.0);
+                if (hVal >= 0.0 && hVal <= 360.0)
+                {
+                    _lastPlayerHeading = hVal;
+                }
+            }
+            double curHeading = _lastPlayerHeading ?? 0.0;
+
+            // Diagonal calculation to eliminate ANY black corner cutoffs when rotated
+            double diag = Math.Ceiling(Math.Sqrt(w * w + h * h)) + 140.0;
+
             Func<double, double, Point> toScreen = (gx, gy) =>
             {
-                double sx = w / 2 + (gx - cx) * scale;
-                double sy = h / 2 - (gy - cy) * scale;
+                double sx = (diag / 2.0) + (gx - cx) * scale;
+                double sy = (diag / 2.0) - (gy - cy) * scale;
                 return new Point(sx, sy);
             };
 
-            // Rotating world container (rotates around player in compass mode)
             Canvas worldCanvas = new Canvas
             {
-                Width = w,
-                Height = h,
+                Width = diag,
+                Height = diag,
                 Background = Brushes.Transparent,
-                ClipToBounds = true
+                ClipToBounds = false
             };
+            Canvas.SetLeft(worldCanvas, (w - diag) / 2.0);
+            Canvas.SetTop(worldCanvas, (h - diag) / 2.0);
 
-            double curHeading = GetDouble(mm, "playerHeading", _lastPlayerHeading ?? 0.0);
-            Point pp = hasPlayer ? toScreen(Convert.ToDouble(playerArr[0]), Convert.ToDouble(playerArr[1])) : new Point(w / 2, h / 2);
+            Point pp = hasPlayer ? toScreen(Convert.ToDouble(playerArr[0]), Convert.ToDouble(playerArr[1])) : new Point(diag / 2.0, diag / 2.0);
 
             if (_compassRotateMode && hasPlayer)
             {
@@ -3265,7 +3352,7 @@ namespace Aion2PetsOverlay
                 }
             }
 
-            // 3. Hidden Cubes / Mystery Chests
+            // 3. Hidden Cubes / Mystery Chests (MetaRoad style: Purple/Magenta square #C084FC)
             int nearbyCubesCount = 0;
             if (_showCubes && _chestsDb != null && _chestsDb.ContainsKey(worldId))
             {
@@ -3298,17 +3385,18 @@ namespace Aion2PetsOverlay
                             }
 
                             Point cp = toScreen(gx, gy);
-                            if (cp.X < -30 || cp.X > w + 30 || cp.Y < -30 || cp.Y > h + 30) continue;
+                            if (cp.X < -40 || cp.X > diag + 40 || cp.Y < -40 || cp.Y > diag + 40) continue;
 
-                            // Cube Marker: Golden/Amber glowing diamond
-                            System.Windows.Shapes.Path cubeIcon = new System.Windows.Shapes.Path
+                            Border cubeIcon = new Border
                             {
-                                Data = Geometry.Parse("M 0,-7 L 7,0 L 0,7 L -7,0 Z"),
-                                Fill = new SolidColorBrush(Color.FromRgb(245, 158, 11)),
-                                Stroke = Brushes.White,
-                                StrokeThickness = 1.0,
+                                Width = 9,
+                                Height = 9,
+                                CornerRadius = new CornerRadius(1.5),
+                                Background = new SolidColorBrush(Color.FromRgb(192, 132, 252)), // #C084FC
+                                BorderBrush = new SolidColorBrush(Color.FromRgb(88, 28, 135)),   // #581C87
+                                BorderThickness = new Thickness(1.0),
                                 IsHitTestVisible = true,
-                                ToolTip = "📦 " + chName + " (" + Tr("קוביה מוסתרת", "Hidden Cube", "Скрытый сундук") + ")"
+                                ToolTip = "📦 " + chName + " (" + Tr("קוביה מוסתרת / תיבה", "Hidden Cube / Chest", "Скрытый куб") + ")"
                             };
 
                             if (_compassRotateMode)
@@ -3317,15 +3405,106 @@ namespace Aion2PetsOverlay
                                 cubeIcon.RenderTransform = new RotateTransform(curHeading);
                             }
 
-                            Canvas.SetLeft(cubeIcon, cp.X);
-                            Canvas.SetTop(cubeIcon, cp.Y);
+                            Canvas.SetLeft(cubeIcon, cp.X - 4.5);
+                            Canvas.SetTop(cubeIcon, cp.Y - 4.5);
                             worldCanvas.Children.Add(cubeIcon);
                         }
                     }
                 }
             }
 
-            // 4. Spawns Dots
+            // 4. Area Mob Level Badges (Level Guide - MetaRoad style)
+            if ((_showLevelGuide || _mapZoom <= 0.65) && _areaLevelsDb != null && _areaLevelsDb.ContainsKey(worldId))
+            {
+                var areasList = _areaLevelsDb[worldId] as ArrayList;
+                if (areasList != null)
+                {
+                    foreach (object aObj in areasList)
+                    {
+                        var ad = aObj as Dictionary<string, object>;
+                        if (ad == null) continue;
+                        double ax = GetDouble(ad, "x", 0);
+                        double ay = GetDouble(ad, "y", 0);
+                        if (ax <= 0 || ay <= 0) continue;
+
+                        Point ap = toScreen(ax, ay);
+                        if (ap.X < -60 || ap.X > diag + 60 || ap.Y < -60 || ap.Y > diag + 60) continue;
+
+                        string aName = GetStr(ad, "name", "");
+                        int minLv = GetInt(ad, "minLevel", 0);
+                        int maxLv = GetInt(ad, "maxLevel", 0);
+                        if (maxLv <= 0) continue;
+
+                        double avg = (minLv + maxLv) / 2.0;
+                        Color ringColor;
+                        if (avg <= 22) ringColor = Color.FromRgb(34, 197, 94);       // Green (#22C55E)
+                        else if (avg <= 36) ringColor = Color.FromRgb(245, 158, 11); // Amber (#F59E0B)
+                        else ringColor = Color.FromRgb(239, 68, 68);                // Red (#EF4444)
+
+                        string lvText = (minLv == maxLv) ? minLv.ToString() : (minLv + "-" + maxLv);
+
+                        StackPanel badgeStack = new StackPanel
+                        {
+                            Orientation = Orientation.Vertical,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            IsHitTestVisible = false
+                        };
+
+                        Border circle = new Border
+                        {
+                            Width = 30,
+                            Height = 30,
+                            CornerRadius = new CornerRadius(15),
+                            Background = new SolidColorBrush(Color.FromArgb(230, 24, 24, 27)),
+                            BorderBrush = new SolidColorBrush(ringColor),
+                            BorderThickness = new Thickness(2.8),
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        circle.Child = new TextBlock
+                        {
+                            Text = lvText,
+                            Foreground = Brushes.White,
+                            FontWeight = FontWeights.ExtraBold,
+                            FontSize = lvText.Length > 4 ? 9.5 : 11,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                        badgeStack.Children.Add(circle);
+
+                        Border namePill = new Border
+                        {
+                            Background = new SolidColorBrush(Color.FromArgb(210, 15, 23, 42)),
+                            BorderBrush = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255)),
+                            BorderThickness = new Thickness(0.8),
+                            CornerRadius = new CornerRadius(3),
+                            Padding = new Thickness(4, 1, 4, 1),
+                            Margin = new Thickness(0, 2, 0, 0),
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        namePill.Child = new TextBlock
+                        {
+                            Text = aName,
+                            Foreground = new SolidColorBrush(Color.FromRgb(245, 245, 244)),
+                            FontSize = 9.0,
+                            FontWeight = FontWeights.Bold
+                        };
+                        badgeStack.Children.Add(namePill);
+
+                        if (_compassRotateMode)
+                        {
+                            badgeStack.RenderTransformOrigin = new Point(0.5, 0.5);
+                            badgeStack.RenderTransform = new RotateTransform(curHeading);
+                        }
+
+                        Canvas.SetLeft(badgeStack, ap.X - 50);
+                        Canvas.SetTop(badgeStack, ap.Y - 18);
+                        badgeStack.Width = 100;
+                        worldCanvas.Children.Add(badgeStack);
+                    }
+                }
+            }
+
+            // 5. Spawns Dots (Colored by dropped Soul Stone / Genus)
             if (spawnsArr != null && _mapZoom >= 0.25)
             {
                 foreach (object spObj in spawnsArr)
@@ -3333,11 +3512,13 @@ namespace Aion2PetsOverlay
                     var sp = spObj as Dictionary<string, object>;
                     if (sp == null) continue;
                     Point p = toScreen(GetDouble(sp, "x", 0), GetDouble(sp, "y", 0));
-                    if (p.X < -10 || p.X > w + 10 || p.Y < -10 || p.Y > h + 10) continue;
+                    if (p.X < -15 || p.X > diag + 15 || p.Y < -15 || p.Y > diag + 15) continue;
 
                     int spPetId = GetInt(sp, "petId", 0);
                     bool isSel = (spPetId == _selectedPetId);
                     bool isLv3 = GetBool(sp, "isLevel3", false);
+                    string spGenus = GetStr(sp, "genus", "");
+                    Color stoneColor = GetGenusColor(spGenus);
 
                     Ellipse dot = new Ellipse
                     {
@@ -3347,7 +3528,7 @@ namespace Aion2PetsOverlay
                             ? new SolidColorBrush(Color.FromRgb(251, 191, 36))
                             : (isLv3
                                 ? new SolidColorBrush(Color.FromArgb(160, 52, 211, 153))
-                                : new SolidColorBrush(Color.FromArgb(200, 56, 189, 248))),
+                                : new SolidColorBrush(Color.FromArgb(220, stoneColor.R, stoneColor.G, stoneColor.B))),
                         Stroke = isSel ? Brushes.White : null,
                         StrokeThickness = isSel ? 1.2 : 0,
                         IsHitTestVisible = false
@@ -3358,7 +3539,7 @@ namespace Aion2PetsOverlay
                 }
             }
 
-            // 5. Labeled Monster Clusters
+            // 6. Labeled Monster Clusters (Colored by Soul Stone / Genus)
             if (clustersArr != null)
             {
                 foreach (object cObj in clustersArr)
@@ -3373,7 +3554,6 @@ namespace Aion2PetsOverlay
                     int aroundCnt = GetInt(cd, "aroundCount", 0);
                     bool isSel = (cPetId == _selectedPetId);
 
-                    // When zoomed in and not showing all, apply tab filter
                     if (!_showAllMonsters && _mapZoom >= 0.4)
                     {
                         if (_currentTab == "around" && aroundCnt <= 0 && !isSel) continue;
@@ -3381,11 +3561,12 @@ namespace Aion2PetsOverlay
                     }
 
                     Point cp = toScreen(GetDouble(cd, "x", 0), GetDouble(cd, "y", 0));
-                    if (cp.X < -60 || cp.X > w + 60 || cp.Y < -40 || cp.Y > h + 40) continue;
+                    if (cp.X < -60 || cp.X > diag + 60 || cp.Y < -40 || cp.Y > diag + 40) continue;
 
                     string mobName = GetStr(cd, "monsterName", "");
                     int mobLv = GetInt(cd, "level", 0);
                     string genus = GetStr(cd, "genus", "");
+                    Color clusterStoneColor = GetGenusColor(genus);
                     int cnt = GetInt(cd, "count", 0);
 
                     string tagText = "";
@@ -3407,9 +3588,9 @@ namespace Aion2PetsOverlay
                             : (aroundCnt > 0
                                 ? new SolidColorBrush(Color.FromRgb(52, 211, 153))
                                 : (inCurArea
-                                    ? new SolidColorBrush(Color.FromArgb(160, 56, 189, 248))
-                                    : new SolidColorBrush(Color.FromArgb(90, 100, 116, 139)))),
-                        BorderThickness = new Thickness(1),
+                                    ? new SolidColorBrush(clusterStoneColor)
+                                    : new SolidColorBrush(Color.FromArgb(140, clusterStoneColor.R, clusterStoneColor.G, clusterStoneColor.B)))),
+                        BorderThickness = new Thickness(1.2),
                         CornerRadius = new CornerRadius(3.5),
                         Padding = new Thickness(3.5, 1, 3.5, 1),
                         IsHitTestVisible = false
@@ -3435,7 +3616,7 @@ namespace Aion2PetsOverlay
                 }
             }
 
-            // 6. Live Nearby Monsters (Live Radar)
+            // 7. Live Nearby Monsters (Live Radar)
             if (liveArr != null)
             {
                 foreach (object lObj in liveArr)
@@ -3444,7 +3625,7 @@ namespace Aion2PetsOverlay
                     if (lv == null) continue;
                     if (!GetBool(lv, "isPet", false)) continue;
                     Point p = toScreen(GetDouble(lv, "x", 0), GetDouble(lv, "y", 0));
-                    if (p.X < 0 || p.X > w || p.Y < 0 || p.Y > h) continue;
+                    if (p.X < 0 || p.X > diag || p.Y < 0 || p.Y > diag) continue;
 
                     Ellipse dot = new Ellipse
                     {
@@ -3461,79 +3642,73 @@ namespace Aion2PetsOverlay
                 }
             }
 
-            // 7. Live Player Marker with View Direction / Field of View Cone
+            // 8. Live Player Marker with View Direction / Field of View Cone
             if (hasPlayer)
             {
-                if (pp.X >= -60 && pp.X <= w + 60 && pp.Y >= -60 && pp.Y <= h + 60)
+                double arrowAngle = _compassRotateMode ? 0.0 : curHeading;
+
+                Polygon fovCone = new Polygon
                 {
-                    double arrowAngle = _compassRotateMode ? 0.0 : curHeading;
-
-                    // Semi-transparent field of view cone pointing in player view direction
-                    Polygon fovCone = new Polygon
+                    Points = new PointCollection
                     {
-                        Points = new PointCollection
-                        {
-                            new Point(0, 0),
-                            new Point(-18, -52),
-                            new Point(18, -52)
-                        },
-                        Fill = new LinearGradientBrush(
-                            Color.FromArgb(95, 56, 189, 248),
-                            Color.FromArgb(0, 56, 189, 248),
-                            new Point(0.5, 1),
-                            new Point(0.5, 0)
-                        ),
-                        RenderTransform = new RotateTransform(arrowAngle),
-                        IsHitTestVisible = false
-                    };
-                    Canvas.SetLeft(fovCone, pp.X);
-                    Canvas.SetTop(fovCone, pp.Y);
-                    worldCanvas.Children.Add(fovCone);
+                        new Point(0, 0),
+                        new Point(-18, -52),
+                        new Point(18, -52)
+                    },
+                    Fill = new LinearGradientBrush(
+                        Color.FromArgb(95, 56, 189, 248),
+                        Color.FromArgb(0, 56, 189, 248),
+                        new Point(0.5, 1),
+                        new Point(0.5, 0)
+                    ),
+                    RenderTransform = new RotateTransform(arrowAngle),
+                    IsHitTestVisible = false
+                };
+                Canvas.SetLeft(fovCone, pp.X);
+                Canvas.SetTop(fovCone, pp.Y);
+                worldCanvas.Children.Add(fovCone);
 
-                    // Direction Arrow Pointer (Chevron)
-                    System.Windows.Shapes.Path dirArrow = new System.Windows.Shapes.Path
-                    {
-                        Data = Geometry.Parse("M 0,-20 L 7,-6 L 0,-10 L -7,-6 Z"),
-                        Fill = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
-                        Stroke = Brushes.White,
-                        StrokeThickness = 1.3,
-                        RenderTransform = new RotateTransform(arrowAngle),
-                        IsHitTestVisible = false
-                    };
-                    Canvas.SetLeft(dirArrow, pp.X);
-                    Canvas.SetTop(dirArrow, pp.Y);
-                    worldCanvas.Children.Add(dirArrow);
+                System.Windows.Shapes.Path dirArrow = new System.Windows.Shapes.Path
+                {
+                    Data = Geometry.Parse("M 0,-20 L 7,-6 L 0,-10 L -7,-6 Z"),
+                    Fill = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
+                    Stroke = Brushes.White,
+                    StrokeThickness = 1.3,
+                    RenderTransform = new RotateTransform(arrowAngle),
+                    IsHitTestVisible = false
+                };
+                Canvas.SetLeft(dirArrow, pp.X);
+                Canvas.SetTop(dirArrow, pp.Y);
+                worldCanvas.Children.Add(dirArrow);
 
-                    // Player Halo & Center Dot
-                    Ellipse halo = new Ellipse
-                    {
-                        Width = 14,
-                        Height = 14,
-                        Stroke = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
-                        StrokeThickness = 2,
-                        Fill = new SolidColorBrush(Color.FromArgb(130, 14, 165, 233)),
-                        IsHitTestVisible = false
-                    };
-                    Canvas.SetLeft(halo, pp.X - 7);
-                    Canvas.SetTop(halo, pp.Y - 7);
-                    worldCanvas.Children.Add(halo);
+                Ellipse halo = new Ellipse
+                {
+                    Width = 14,
+                    Height = 14,
+                    Stroke = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
+                    StrokeThickness = 2,
+                    Fill = new SolidColorBrush(Color.FromArgb(130, 14, 165, 233)),
+                    IsHitTestVisible = false
+                };
+                Canvas.SetLeft(halo, pp.X - 7);
+                Canvas.SetTop(halo, pp.Y - 7);
+                worldCanvas.Children.Add(halo);
 
-                    Ellipse playerDot = new Ellipse
-                    {
-                        Width = 6,
-                        Height = 6,
-                        Fill = Brushes.White,
-                        IsHitTestVisible = false
-                    };
-                    Canvas.SetLeft(playerDot, pp.X - 3);
-                    Canvas.SetTop(playerDot, pp.Y - 3);
-                    worldCanvas.Children.Add(playerDot);
-                }
+                Ellipse playerDot = new Ellipse
+                {
+                    Width = 6,
+                    Height = 6,
+                    Fill = Brushes.White,
+                    IsHitTestVisible = false
+                };
+                Canvas.SetLeft(playerDot, pp.X - 3);
+                Canvas.SetTop(playerDot, pp.Y - 3);
+                worldCanvas.Children.Add(playerDot);
             }
 
             _miniMapCanvas.Children.Add(worldCanvas);
 
-            // 8. Floating Compass Rose Widget (Top-Left)
+            // 9. Floating Compass Rose Widget (Top-Left)
             Border compassDial = new Border
             {
                 Width = 26,

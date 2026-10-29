@@ -1,11 +1,13 @@
 # 🐾 Aion 2 Overlay Hub — Pets & Crafting Tracker
 
+![Version](https://img.shields.io/badge/Version-v2.5.0--beta-blue.svg)
 ![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)
 ![Framework](https://img.shields.io/badge/UI-WPF%20%28.NET%204.x%29-512BD4?logo=dotnet)
 ![Standalone](https://img.shields.io/badge/Engine-Pure%20C%23%20Direct%20Sync-10B981)
 ![Languages](https://img.shields.io/badge/i18n-HEB%20%7C%20ENG%20%7C%20RUS-F59E0B)
+![Status](https://img.shields.io/badge/Map%20Engine-WIP%20%2F%20Experimental-FFA500)
 
-A lightweight, always-on-top, transparent in-game **Overlay Hub for Aion 2** with zero installation required. Tracks your **Pets & Souls progress toward Level 3** and your **⚒️ Crafting & Essence Extraction Goals** in real time directly from your live inventory and nearby spawns.
+A lightweight, always-on-top, transparent in-game **Overlay Hub for Aion 2** with zero installation required. Built natively in C# WPF to run alongside your game seamlessly, passively tracking your **Pets & Souls progress toward Level 3**, **⚒️ Crafting & Essence Extraction Goals**, and an **Integrated Live Radar Mini-Map** inspired by MetaRoad.
 
 ---
 
@@ -15,145 +17,175 @@ A lightweight, always-on-top, transparent in-game **Overlay Hub for Aion 2** wit
 
 ---
 
-## ✨ Key Features
+## 🌟 Core Modules
 
-### 🧩 Modular Overlay Hub
-Enable or switch between overlay modules with one click from the top switcher or **`🧩 Overlays`** menu:
-- **🐾 Pets & Souls Tracker** — Live progress cards for all pet souls toward Level 3.
-- **⚒️ Crafting & Essence Extraction Tracker** — Real-time tracking of herbs, ores, gems, aether, wood, crystals, and alchemy/cooking crafts with live inventory progress and gathering rate.
-- **🗺 Zone Spawns Map** — Interactive vector radar map of area boundaries, monster spawn clusters, live nearby monsters, and player position.
+### 1. 🐾 Pets & Souls Tracker (Lv. 3 Soul Engine)
+* **Real-time Soul Progress**: Tracks souls needed for every pet tier (`5` for Lv.1, `25` for Lv.2, `75` for Lv.3 — `105` total souls for completion).
+* **Soul Stone (Genus) Color Matching**:
+  * 🟠 **Feral**: Amber / Orange (`#F97316`)
+  * 🔵 **Intellect**: Sky Blue (`#60A5FA`)
+  * 🟢 **Nature**: Emerald Green (`#4ADE80`)
+  * 🟣 **Trans**: Purple / Violet (`#C084FC`)
+  * 🟡 **Special**: Gold / Yellow (`#FACC15`)
+* **Live Distance & Direction**: Displays closest live monsters with dynamic arrows (`↑`, `↗`, `→`, `↘`...) and real-time distance in meters (`12 m`, `45 m`).
+* **Intelligent Tab Filtering**:
+  * **Around (`מסביב`)**: Only monsters currently alive within radar proximity.
+  * **Area (`באזור`)**: Pets farmable in your current subzone.
+  * **Map (`במפה`)**: All pets located on the active world map.
+  * **All (`הכל`)**: Complete searchable database of all 209 pets.
 
-### ⚒️ Live Crafting & Essence Extraction Tracker
-- **Live Inventory Sync**: Reads item stacks directly from your character inventory in real time.
-- **Recipe Decomposition**: Select or pin recipes (e.g. *Major Life Potion*, *Recovery Serum*) and see live progress for all required ingredients.
-- **Celebration Banner**: Displays a bright **`🎉 Ready to Craft!`** banner when all required materials are collected.
-- **Gathering Speed & ETA**: Calculates collection rate (`+N / hr`) and estimated time remaining based on active gathering session statistics.
-- **Node & Area Guide**: Displays the best map and zone for each material, along with required extraction levels (`Req. Lv. 1`–`Lv. 210`).
-- **Quick Goals**: Increment or double target quantities (`−10`, `+10`, `×2`, `🗑️`).
+---
 
-### 🔥 Real-Time Level 3 Soul Calculation
-- Automatically calculates current Pet Level (`Lv. 0` → `Lv. 3`) and souls within the current tier (`0/5`, `0/25`, `0/75` — `105` total souls for Level 3).
-- Displays **`Left: 0 ✔`** once a pet reaches Level 3, or the exact number of souls still needed.
-- Location-aware sorting: monsters currently around you and in your zone appear at the top, sorted by proximity (`13 m`, `22 m`, `118 m`...).
+### 2. ⚒️ Live Crafting & Essence Extraction Tracker
+* **Real-Time Inventory Sync**: Automatically monitors your inventory stacks. When you gather an herb, mine ore, or collect drops, the counter updates immediately (`18 / 25 · Missing: 7`).
+* **Wishlist & Quantity Goals**: Click items to add them to your target wishlist. Use quick buttons (`−10`, `+10`, `×2`, `🗑️`) to set goal quantities.
+* **Recipe Decomposition**: Select finished items (e.g., *Major Life Potion*, *Recovery Serum*), and the tracker breaks them down into their base extraction materials (Angelica, Titanium Ore, Water Crystal).
+* **🎉 Ready to Craft Celebration**: When all required ingredients for pinned crafts are gathered, a prominent green celebration banner alerts you that you are ready to craft!
+* **Gathering Statistics (Rate / Hour & ETA)**: Calculates your live gathering speed (`+N / hr`) and gives an estimated completion time based on active gathering timestamps.
+* **Extraction Guide & Node Levels**: Lists recommended zones and minimum Essence Extraction level requirements (`Req. Lv. 1`–`Lv. 210`) for every material.
 
-### 🚀 Zero Dependency Portable Engine
-- Built-in **Pure C# Direct Engine**: Double-clicking `Aion2PetsOverlay.exe` immediately reads `pets-db.json` and syncs with Questlog data in 0 ms. No Node.js or external installations required for end users!
-- When Node.js or compatible runtimes are present, background TCP packet synchronization runs seamlessly side-by-side.
+---
 
-### 📍 Location-Aware Filtering
-- **Around (`מסביב`)**: Shows pets dropped by monsters currently alive near your character, including live distance (`m`) and count (`×N`).
-- **Here / Area (`באזור`)**: Automatically filters pets that spawn inside your current zone polygon.
-- **Map (`במפה`)**: Shows all farmable pets in the current world map (`Elysea`, `Asmodae`, `Abyss`, `Altgard`, etc.).
-- **All (`הכל`)**: Full searchable catalog of all 209 pets (165 farmable in the world).
+### 3. 🗺️ Integrated World Mini-Map & Radar (MetaRoad Style)
+* **High-Resolution World Terrain**: Renders official high-res map textures for active zones (Altgard, Morheim, Verteron, Eltnen, Reshanta/Abyss).
+* **🏷️ Level Guide (Area Mob Levels)**:
+  * MetaRoad-style circular badges at each subzone center with mob level bounds (`10-11`, `18-20`, `27-30`, `33`, `43-45`).
+  * Color-coded by difficulty: 🟢 Green (Lv. 1–22), 🟡 Amber (Lv. 23–36), 🔴 Red (Lv. 37–50+).
+  * Prominent subzone name pills underneath each badge.
+* **📦 Hidden Cubes & Mystery Chests**:
+  * 1,440+ Hidden Cube spawn locations and regional chests displayed as bright purple squares (`#C084FC`).
+  * Hover tooltip shows cube name and location.
+* **🧭 Compass vs. North-Up Mode**:
+  * **Compass Mode (`🧭`)**: Map rotates around the player with continuous heading estimation and 0% black corner clipping.
+  * **North-Up Mode (`⬆️`)**: Stable fixed map with 360° rotating player chevron and vision flashlight cone.
+* **Interactive Navigation**:
+  * Left-Click Drag: Pan around the world.
+  * Mouse Wheel: Zoom in/out (`0.06x` to `4.0x`).
+  * Double-Click / `🎯`: Re-center on player.
+  * `⤢`: Expand / collapse map height (`180px` ↔ `330px`).
 
-### 🗺 Interactive Zone & Spawns Radar Map
-- Auto-fits to your current zone or selected pet.
-- Displays area polygons with zone names, labeled monster spawn clusters (`Monster Name ×Count`), live nearby monsters, and your player marker.
-- Supports **Mouse Drag to Pan**, **Mouse Wheel to Zoom**, **Click on any Pet Card** to highlight & center its spawn points in gold, plus `+` / `−` / `🎯 Reset` / `↕ Height` controls.
+---
 
-### 🖼 Pet Icons & Customizable Checkboxes (`⚙`)
-- Automatically downloads and caches official `.webp` pet icons locally in `data/icons/`.
-- Toggle every visual element independently via checkboxes:
-  - `[✔] Pet Icons`
-  - `[✔] Distance & Arrow (m)`
-  - `[✔] Show Map`
-  - `[✔] Spawn/Around Pin`
-  - `[✔] Level Diamonds (◆◆◆)`
-  - `[✔] Missing to Lv.3`
-  - `[✔] Monster + Pet Name`
-  - `[✔] Hide Lv.3 (0 left)`
+## ⚠️ Known Issues & Work-In-Progress (שקיפות ובאגים ידועים)
 
-### 🌐 Multi-Language Support (3 Separate Checkboxes)
-- Instant UI & RTL/LTR layout switching between **עברית (`HEB`)**, **English (`ENG`)**, and **Русский (`RUS`)**.
-
-### 📐 Free Window Resize & Click-Through Mode
-- Resize freely by dragging any edge or corner (window dimensions & settings persist automatically in `data/ui-settings.json`).
-- Global hotkeys for **Click-Through (`F9`)** and **Show/Hide (`F10`)**.
+> [!WARNING]
+> מודול המפה החדש נמצא כרגע בשלב בטא פעיל (`Experimental / WIP`). אנחנו ממשיכים לשפר וללטש אותו:
+>
+> 1. **סיבוב מפה במקום (Stationary Heading)**:
+>    * כיוון השחקן מסונכרן מתנועת ה-Delta והפאקטות. בעמידה מוחלטת ללא תנועה, סיבוב המצלמה במקום עדיין עשוי שלא לעדכן מיידית את זווית המצפן. מומלץ להשתמש במצב **צפון קבוע (`⬆️`)** לניווט יציב ביותר ללא סחרחורת.
+> 2. **פיקסול בזום קיצוני (Texture Scaling)**:
+>    * טקסטורות המשחק המקוריות הן בגודל 2048×2048. בזום עמוק מאוד (`>2.5x`) על מפה רחבה, פני השטח עשויים להיראות מטושטשים או מפוקסלים. אנו עובדים על שילוב טקסטורות Vector/Tiles משופרות.
+> 3. **גובה (Z-Axis Elevation)**:
+>    * הרדאר מציג מרחק אוקלידי דו-ממדי (X/Y). במערות רב-מפלסיות או הרים תלולים, מפלצת עשויה להופיע קרובה אך להימצא במפלס שמעל או מתחת לשחקן.
+> 4. **סנכרון תרגום מלא לחלק מהמתכונים**:
+>    * חלק משמות צמחי הקראפט הגבוהים מוצגים באנגלית/רוסית וממתינים להשלמת מילון השמות העברי.
 
 ---
 
 ## ⌨️ Global Hotkeys
 
-| Hotkey | Action |
-| :--- | :--- |
-| **`F9`** | Toggle **Click-Through (Lock/Unlock)** mode — passes mouse clicks directly to Aion 2 |
-| **`F10`** | Toggle **Show / Hide** overlay window |
+| Hotkey | Action | Description |
+| :---: | :--- | :--- |
+| **`F9`** | **Click-Through Mode** | Passes all mouse clicks through the overlay directly into Aion 2. Overlay becomes transparent to mouse events. |
+| **`F10`** | **Show / Hide** | Instantly hides or restores the overlay window. |
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start for Players
 
-### Prerequisites
-- **Windows 10 / 11** (includes `.NET Framework 4.x` and WPF natively).
-- **Node.js** (used by `sniffer.cjs` for background world/polygon indexing and HTTP state serving on `http://127.0.0.1:47420`).
-- **Aion 2** running (supports live sync with Questlog `aion-2` state in `%APPDATA%\Questlog\aion-2` and/or raw TCP packet sniffing).
+### Zero-Setup Direct Launch (ללא התקנות)
+If you or a friend cloned/downloaded this repository, you **do NOT need to install Node.js or run any build tools**:
 
-### Running the Overlay
-Double-click **`start-overlay.bat`** or launch **`Aion2PetsOverlay.exe`** directly:
-
-```bat
-start-overlay.bat
-```
-
-You can also view the browser/OBS edition at any time while the backend is running by opening `overlay.html` or `http://127.0.0.1:47420/`.
+1. Download or clone this repository to your PC.
+2. Launch **Aion 2** and log into your character.
+3. Double-click **`Aion2PetsOverlay.exe`** (or run `start-overlay.bat`).
+4. The overlay connects to Questlog / game memory in **0 ms** and starts tracking!
 
 ---
 
-## 🛠️ Building from Source (`Overlay.cs` → `Aion2PetsOverlay.exe`)
+## 🛠️ Building from Source (`Overlay.cs`)
 
-No Visual Studio installation is required. Compile `Overlay.cs` directly using the built-in Windows .NET Framework C# compiler (`csc.exe`) in PowerShell:
+You can compile `Overlay.cs` directly using the built-in Microsoft .NET Framework C# compiler (`csc.exe`) without needing Visual Studio:
 
 ```powershell
-$wpfDir = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF"
+$wpf = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF"
 & "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe" `
-  /nologo /target:winexe `
+  /nologo /codepage:65001 /utf8output /target:winexe `
   /out:"Aion2PetsOverlay.exe" `
-  /r:"$wpfDir\PresentationFramework.dll" `
-  /r:"$wpfDir\PresentationCore.dll" `
-  /r:"$wpfDir\WindowsBase.dll" `
-  /r:"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Xaml.dll" `
-  /r:"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Web.Extensions.dll" `
+  /lib:$wpf `
+  /r:PresentationCore.dll `
+  /r:PresentationFramework.dll `
+  /r:WindowsBase.dll `
+  /r:System.Xaml.dll `
+  /r:System.Web.Extensions.dll `
+  /r:System.dll `
+  /r:System.Drawing.dll `
+  /r:System.Core.dll `
   "Overlay.cs"
 ```
 
 ---
 
-## 📁 Project Structure
+## 🏷️ Git Versioning & Release Workflow
 
-```text
-├── Aion2PetsOverlay.exe   # Compiled native WPF transparent overlay app
-├── Overlay.cs             # C# WPF source code (Overlay Hub, Pets Tracker, Interactive Map)
-├── sniffer.cjs            # Node.js backend engine (Pets DB indexer, polygon locator, HTTP/file sync)
-├── overlay.html           # Browser / OBS web overlay interface
-├── start-overlay.bat      # One-click launcher script
-├── screenshoot.png        # In-game overlay preview screenshot
-└── data/
-    ├── pets-db.json       # Complete Aion 2 Pets, Monsters, Worlds, Area Polygons & Spawn points DB
-    ├── icons/             # Auto-cached pet icons (.webp) [ignored in git]
-    ├── overlay-state.json # Runtime live state snapshot [ignored in git]
-    └── ui-settings.json   # Saved user preferences & window size [ignored in git]
+כדי לנהל גרסאות בצורה מסודרת ב-Git:
+
+```bash
+# 1. בדיקת סטטוס קבצים
+git status
+
+# 2. הוספת כל השינויים
+git add Overlay.cs sniffer.cjs Aion2PetsOverlay.exe README.md data/chests-db.json data/area-levels.json data/crafting-wishlist.json
+
+# 3. יצירת Commit גרסה
+git commit -m "feat(v2.5.0): Add Crafting Tracker, MetaRoad Level Guide, Hidden Cubes, and Soul Stone colors"
+
+# 4. יצירת Git Tag לגרסה
+git tag -a v2.5.0 -m "Release v2.5.0: Crafting Wishlist, MetaRoad Mini-Map & Soul Stone Genus Colors"
+
+# 5. דחיפה ל-GitHub כולל תגיות
+git push origin main --tags
 ```
 
 ---
 
-## 🇮🇱 מדריך מהיר בעברית
+## 📁 Repository Structure
 
-**Aion 2 Overlay Hub** הוא תוסף שקוף וקל משקל שיושב מעל המשחק Aion 2 ללא צורך בהתקנה, ומציג בזמן אמת:
-1. **🐾 מעקב חיות ונשמות (Pets & Souls Tracker)** — התקדמות לרמה 3, מרחק וכיוון מפלצות סביבך.
-2. **⚒️ מעקב קראפטינג ואיסוף (Crafting & Essence Extraction)** — מעקב חי אחרי איסוף צמחים, עפרות, אבני חן, את'ר, עץ, קריסטלים ומתכוני שיקויים עם מונה חי מתוך ה-Inventory, קצב איסוף לשעה (Rate/hr), זמן משוער לסיום (ETA), והתראה כשהכל מוכן לייצור (`🎉 Ready to Craft!`).
-3. **🗺 מפת אזור וספאונים (Interactive Radar Map)** — מפה וקטורית חיה של נקודות ה-Spawn, מפלצות סביבך וגבולות אזורים.
+```text
+├── Aion2PetsOverlay.exe      # Compiled native WPF overlay (portable, zero-install)
+├── Overlay.cs                # Pure C# WPF engine (Hub, Pets Tracker, Crafting, Mini-Map)
+├── sniffer.cjs               # Optional Node.js packet & zone synchronizer
+├── overlay.html              # OBS / Browser edition
+├── start-overlay.bat         # Windows one-click startup batch script
+├── screenshoot.png           # In-game preview screenshot
+└── data/
+    ├── pets-db.json          # 209 Aion 2 Pets database with drop rates and spawn locations
+    ├── chests-db.json        # 1,440+ Hidden Cubes & Chests coordinates across all 7 worlds
+    ├── area-levels.json      # Precomputed subzone mob levels (p10-p90) for Level Guide
+    ├── crafting-wishlist.json# Saved user craft wishlist & goals
+    ├── maps/                 # High-resolution world terrain textures (.png)
+    ├── icons/                # Auto-cached pet icons (.webp) [git-ignored]
+    ├── overlay-state.json    # Real-time state IPC exchange [git-ignored]
+    └── ui-settings.json      # User preferences, window size & active tabs [git-ignored]
+```
 
-### תכונות עיקריות
-- **עובד עצמאית וללא התקנות (Zero Setup)**: התוכנה מכילה מנוע C# ישיר שקורא מיד את בסיס הנתונים ומתעדכן בזמן אמת — חבר שמוריד מגיטהאב רק לוחץ פעמיים על `Aion2PetsOverlay.exe` וזה עובד מיד!
-- **מעקב קראפטינג ואיסוף חי**: סופר בזמן אמת כמה חומרים יש בתיק מול היעד שבחרת, כולל פירוק מתכונים למרכיבים שלהם (למשל שיקוי חיים מובחר דורש 2 אנג'ליקה + 1 עפרת טיטניום + 1 קריסטל מים).
-- **חישוב אוטומטי לרמה 3**: מציג לכל חיה את הרמה הנוכחית (`Lv. 0` עד `Lv. 3`), כמות הנשמות בשלב הנוכחי (`5` / `25` / `75`), וכמה נשאר עד רמה 3 (`נשאר: 0 ✔` כשהחיה ברמה 3).
-- **מיון חכם לפי קרבה**: מפלצות שנמצאות סביבך מופיעות תמיד בראש הרשימה עם מרחק מדויק במטרים וחץ כיוון.
-- **התאמה אישית מלאה (`⚙`)**:
-  - 3 צ'קבוקסים נפרדים לבחירת שפה: **עברית (`HEB`)**, **אנגלית (`ENG`)**, ו**רוסית (`RUS`)**.
-  - צ'קבוקסים להצגה/הסתרה של תמונות, מרחק במטרים, מפה, יהלומי רמה, והסתרת חיות שהגיעו לרמה 3.
-  - שינוי גודל חופשי (Resize) מגבולות החלון והפינות.
+---
 
-### הפעלה וקיצורי מקשים
-הפעל את הקובץ **`start-overlay.bat`** או לחץ פעמיים על **`Aion2PetsOverlay.exe`**.
-- **`F9`** — נעילת/שחרור עכבר (Click-Through) כדי ללחוץ דרך ה-Overlay לתוך המשחק.
-- **`F10`** — הצגה/הסתרה מהירה של ה-Overlay.
+## 🇮🇱 מדריך מקיף למשתמש בעברית
+
+### מה חדש בגרסה v2.5.0?
+1. **⚒️ מעקב קראפטינג ואיסוף (Crafting & Essence Extraction)**:
+   * מעקב ישיר אחר חומרי גלם בתיק (צמחים, עפרות, אבני חן, את'ר וקריסטלים).
+   * הגדרת כמויות יעד (למשל `100` אנג'ליקה או `50` עפרת טיטניום).
+   * התרעת **`🎉 Ready to Craft!`** ירוקה ברגע שכל החומרים נאספו.
+   * קצב איסוף לשעה (Rate/hr) וזמן משוער לסיום איסוף (ETA).
+   * מדריך אזורי איסוף מומלצים ודרישות רמת איסוף (`Req. Lv. 1–210`).
+
+2. **🗺️ מפת עולם ורדאר חי (בהשראת MetaRoad)**:
+   * **מדריך רמות אזור (`🏷️ LVL`)**: מציג עיגולים צבעוניים עם רמות המפלצות בכל אזור (`10-11`, `18-20`, `27-30`, `33`, `43-45`) לפי קושי (ירוק, צהוב, אדום).
+   * **קוביות מוסתרות (`📦`)**: מעל 1,440 נקודות של Hidden Cubes ותיבות שלל בריבועים סגולים בולטים (`#C084FC`) בדיוק כמו במפה של MetaRoad.
+   * **צבע לפי אבן הנשמה (Soul Stone)**: פס ההתקדמות בכרטיסייה והנקודות במפה נצבעים בצבע האבן המדויקת של המפלצת (ענבר, כחול, ירוק, סגול, זהב).
+   * **מצב מצפן (`🧭`) או צפון קבוע (`⬆️`)**: מפה מסתובבת ללא פינות שחורות, או מצב צפון יציב עם חץ שחקן מסתובב ב-360°.
+
+3. **חברים מורידים מגיט וזה עובד מיד**:
+   * הקובץ המקומפל `Aion2PetsOverlay.exe` נמצא במאגר ורץ עצמאית לחלוטין ללא התקנת ספריות חיצוניות או Node.js.

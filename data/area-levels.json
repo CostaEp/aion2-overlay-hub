@@ -1,0 +1,1676 @@
+﻿{
+    "1010":  [
+                 {
+                     "index":  0,
+                     "name":  "Deserter Encampment",
+                     "x":  5086,
+                     "y":  5395,
+                     "tier":  1,
+                     "minLevel":  27,
+                     "maxLevel":  27,
+                     "mobCount":  15
+                 },
+                 {
+                     "index":  1,
+                     "name":  "Eastern Cantas Valley",
+                     "x":  4206,
+                     "y":  4214,
+                     "tier":  3,
+                     "minLevel":  12,
+                     "maxLevel":  13,
+                     "mobCount":  407
+                 },
+                 {
+                     "index":  3,
+                     "name":  "Southern Altamia Highland",
+                     "x":  5418,
+                     "y":  6670,
+                     "tier":  1,
+                     "minLevel":  33,
+                     "maxLevel":  33,
+                     "mobCount":  423
+                 },
+                 {
+                     "index":  4,
+                     "name":  "Eastern Altamia Highland",
+                     "x":  6598,
+                     "y":  5283,
+                     "tier":  1,
+                     "minLevel":  14,
+                     "maxLevel":  35,
+                     "mobCount":  337
+                 },
+                 {
+                     "index":  5,
+                     "name":  "Kraka Footpath",
+                     "x":  6558,
+                     "y":  4487,
+                     "tier":  1,
+                     "minLevel":  20,
+                     "maxLevel":  40,
+                     "mobCount":  1426
+                 },
+                 {
+                     "index":  6,
+                     "name":  "Scarlet Forest",
+                     "x":  6018,
+                     "y":  3800,
+                     "tier":  1,
+                     "minLevel":  41,
+                     "maxLevel":  41,
+                     "mobCount":  145
+                 },
+                 {
+                     "index":  7,
+                     "name":  "Western Cantas Valley",
+                     "x":  3809,
+                     "y":  4449,
+                     "tier":  3,
+                     "minLevel":  10,
+                     "maxLevel":  11,
+                     "mobCount":  274
+                 },
+                 {
+                     "index":  8,
+                     "name":  "Ellun River Midstream",
+                     "x":  4199,
+                     "y":  4926,
+                     "tier":  1,
+                     "minLevel":  18,
+                     "maxLevel":  20,
+                     "mobCount":  1380
+                 },
+                 {
+                     "index":  9,
+                     "name":  "Spirit\u0027s Rest",
+                     "x":  5397,
+                     "y":  3718,
+                     "tier":  3,
+                     "minLevel":  16,
+                     "maxLevel":  16,
+                     "mobCount":  50
+                 },
+                 {
+                     "index":  10,
+                     "name":  "Pilgrim\u0027s Ridge",
+                     "x":  5050,
+                     "y":  5427,
+                     "tier":  1,
+                     "minLevel":  27,
+                     "maxLevel":  27,
+                     "mobCount":  246
+                 },
+                 {
+                     "index":  11,
+                     "name":  "Southern Tolbas Forest",
+                     "x":  4029,
+                     "y":  5811,
+                     "tier":  3,
+                     "minLevel":  23,
+                     "maxLevel":  25,
+                     "mobCount":  193
+                 },
+                 {
+                     "index":  12,
+                     "name":  "Altamia Canyon",
+                     "x":  6018,
+                     "y":  5915,
+                     "tier":  1,
+                     "minLevel":  33,
+                     "maxLevel":  33,
+                     "mobCount":  127
+                 },
+                 {
+                     "index":  13,
+                     "name":  "Forest of Exiles",
+                     "x":  4253,
+                     "y":  6461,
+                     "tier":  1,
+                     "minLevel":  27,
+                     "maxLevel":  30,
+                     "mobCount":  94
+                 },
+                 {
+                     "index":  14,
+                     "name":  "Garden of the Illusion God",
+                     "x":  6653,
+                     "y":  6811,
+                     "tier":  3,
+                     "minLevel":  44,
+                     "maxLevel":  45,
+                     "mobCount":  303
+                 },
+                 {
+                     "index":  16,
+                     "name":  "Eastern Tolbas Forest",
+                     "x":  4626,
+                     "y":  5843,
+                     "tier":  0,
+                     "minLevel":  25,
+                     "maxLevel":  26,
+                     "mobCount":  120
+                 },
+                 {
+                     "index":  19,
+                     "name":  "Eternal Isle",
+                     "x":  2283,
+                     "y":  7975,
+                     "tier":  1,
+                     "minLevel":  49,
+                     "maxLevel":  50,
+                     "mobCount":  832
+                 },
+                 {
+                     "index":  21,
+                     "name":  "Mantasch Patrol Base",
+                     "x":  5836,
+                     "y":  4659,
+                     "tier":  1,
+                     "minLevel":  39,
+                     "maxLevel":  39,
+                     "mobCount":  1
+                 },
+                 {
+                     "index":  22,
+                     "name":  "Sehna Outpost",
+                     "x":  6115,
+                     "y":  3520,
+                     "tier":  1,
+                     "minLevel":  41,
+                     "maxLevel":  41,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  23,
+                     "name":  "Sabga Balaur Campsite",
+                     "x":  6839,
+                     "y":  4425,
+                     "tier":  1,
+                     "minLevel":  39,
+                     "maxLevel":  39,
+                     "mobCount":  7
+                 },
+                 {
+                     "index":  26,
+                     "name":  "Miros Post",
+                     "x":  4098,
+                     "y":  5007,
+                     "tier":  1,
+                     "minLevel":  18,
+                     "maxLevel":  18,
+                     "mobCount":  13
+                 },
+                 {
+                     "index":  27,
+                     "name":  "Poacher\u0027s Base",
+                     "x":  3749,
+                     "y":  5933,
+                     "tier":  1,
+                     "minLevel":  25,
+                     "maxLevel":  25,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  28,
+                     "name":  "Gargos Thieves Campsite",
+                     "x":  5090,
+                     "y":  5874,
+                     "tier":  1,
+                     "minLevel":  27,
+                     "maxLevel":  27,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  29,
+                     "name":  "Canyon Thieves Den",
+                     "x":  6047,
+                     "y":  5627,
+                     "tier":  1,
+                     "minLevel":  33,
+                     "maxLevel":  33,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  30,
+                     "name":  "Romlon\u0027s Hideout",
+                     "x":  5645,
+                     "y":  4416,
+                     "tier":  1,
+                     "minLevel":  39,
+                     "maxLevel":  39,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  31,
+                     "name":  "Forest Shade Execution Site",
+                     "x":  5130,
+                     "y":  7145,
+                     "tier":  1,
+                     "minLevel":  33,
+                     "maxLevel":  33,
+                     "mobCount":  6
+                 },
+                 {
+                     "index":  32,
+                     "name":  "Renegade Hideout",
+                     "x":  5508,
+                     "y":  6671,
+                     "tier":  1,
+                     "minLevel":  33,
+                     "maxLevel":  33,
+                     "mobCount":  4
+                 },
+                 {
+                     "index":  33,
+                     "name":  "Plateau Hill Base",
+                     "x":  6401,
+                     "y":  5954,
+                     "tier":  1,
+                     "minLevel":  34,
+                     "maxLevel":  34,
+                     "mobCount":  10
+                 },
+                 {
+                     "index":  34,
+                     "name":  "Western Altamia Highland",
+                     "x":  5538,
+                     "y":  5678,
+                     "tier":  0,
+                     "minLevel":  32,
+                     "maxLevel":  32,
+                     "mobCount":  246
+                 },
+                 {
+                     "index":  35,
+                     "name":  "Ellun River Marsh",
+                     "x":  4982,
+                     "y":  4018,
+                     "tier":  3,
+                     "minLevel":  13,
+                     "maxLevel":  15,
+                     "mobCount":  557
+                 },
+                 {
+                     "index":  36,
+                     "name":  "Ellun River Meadow",
+                     "x":  4568,
+                     "y":  4224,
+                     "tier":  1,
+                     "minLevel":  18,
+                     "maxLevel":  20,
+                     "mobCount":  252
+                 },
+                 {
+                     "index":  37,
+                     "name":  "Canyon Campsite",
+                     "x":  5950,
+                     "y":  5782,
+                     "tier":  0,
+                     "minLevel":  33,
+                     "maxLevel":  33,
+                     "mobCount":  4
+                 },
+                 {
+                     "index":  41,
+                     "name":  "Purifying Altar",
+                     "x":  7171,
+                     "y":  5275,
+                     "tier":  3,
+                     "minLevel":  45,
+                     "maxLevel":  45,
+                     "mobCount":  1
+                 },
+                 {
+                     "index":  44,
+                     "name":  "Odyle Spider Cave",
+                     "x":  5310,
+                     "y":  4308,
+                     "tier":  0,
+                     "minLevel":  16,
+                     "maxLevel":  16,
+                     "mobCount":  14
+                 },
+                 {
+                     "index":  46,
+                     "name":  "Destroyed Abyss Gate",
+                     "x":  5223,
+                     "y":  4857,
+                     "tier":  3,
+                     "minLevel":  19,
+                     "maxLevel":  21,
+                     "mobCount":  58
+                 },
+                 {
+                     "index":  47,
+                     "name":  "Kizeri\u0027s Cave",
+                     "x":  4982,
+                     "y":  5778,
+                     "tier":  0,
+                     "minLevel":  30,
+                     "maxLevel":  30,
+                     "mobCount":  5
+                 },
+                 {
+                     "index":  48,
+                     "name":  "Verteron Fortress Ruins",
+                     "x":  4835,
+                     "y":  4985,
+                     "tier":  1,
+                     "minLevel":  20,
+                     "maxLevel":  22,
+                     "mobCount":  191
+                 },
+                 {
+                     "index":  49,
+                     "name":  "Aullaeu Village",
+                     "x":  4587,
+                     "y":  6405,
+                     "tier":  3,
+                     "minLevel":  27,
+                     "maxLevel":  30,
+                     "mobCount":  231
+                 },
+                 {
+                     "index":  50,
+                     "name":  "Aullaeu Funeral Island",
+                     "x":  3420,
+                     "y":  5912,
+                     "tier":  0,
+                     "minLevel":  30,
+                     "maxLevel":  30,
+                     "mobCount":  6
+                 },
+                 {
+                     "index":  51,
+                     "name":  "Sacrifice\u0027s Rest",
+                     "x":  5690,
+                     "y":  7222,
+                     "tier":  3,
+                     "minLevel":  37,
+                     "maxLevel":  37,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  53,
+                     "name":  "Collapsed Verteron Barrier Tower",
+                     "x":  4947,
+                     "y":  3646,
+                     "tier":  0,
+                     "minLevel":  14,
+                     "maxLevel":  14,
+                     "mobCount":  10
+                 },
+                 {
+                     "index":  55,
+                     "name":  "Dawn Legion Temporary Outpost",
+                     "x":  4714,
+                     "y":  5544,
+                     "tier":  2,
+                     "minLevel":  22,
+                     "maxLevel":  22,
+                     "mobCount":  6
+                 },
+                 {
+                     "index":  57,
+                     "name":  "Northern Tolbas Forest",
+                     "x":  4276,
+                     "y":  5539,
+                     "tier":  3,
+                     "minLevel":  24,
+                     "maxLevel":  24,
+                     "mobCount":  117
+                 },
+                 {
+                     "index":  58,
+                     "name":  "Drana Processing Area",
+                     "x":  6465,
+                     "y":  3955,
+                     "tier":  3,
+                     "minLevel":  41,
+                     "maxLevel":  42,
+                     "mobCount":  191
+                 },
+                 {
+                     "index":  59,
+                     "name":  "Drana Cultivation Area",
+                     "x":  6180,
+                     "y":  4170,
+                     "tier":  0,
+                     "minLevel":  40,
+                     "maxLevel":  40,
+                     "mobCount":  49
+                 },
+                 {
+                     "index":  60,
+                     "name":  "Pilgrim\u0027s Rest",
+                     "x":  5981,
+                     "y":  6814,
+                     "tier":  0,
+                     "minLevel":  44,
+                     "maxLevel":  44,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  61,
+                     "name":  "Illusion Oratory",
+                     "x":  4727,
+                     "y":  4984,
+                     "tier":  0,
+                     "minLevel":  22,
+                     "maxLevel":  22,
+                     "mobCount":  1
+                 },
+                 {
+                     "index":  63,
+                     "name":  "Night Dew Cave",
+                     "x":  4309,
+                     "y":  5996,
+                     "tier":  3,
+                     "minLevel":  25,
+                     "maxLevel":  25,
+                     "mobCount":  7
+                 },
+                 {
+                     "index":  64,
+                     "name":  "Krall Command Post",
+                     "x":  4799,
+                     "y":  4989,
+                     "tier":  0,
+                     "minLevel":  21,
+                     "maxLevel":  21,
+                     "mobCount":  4
+                 },
+                 {
+                     "index":  66,
+                     "name":  "Contaminated Sanctum",
+                     "x":  6884,
+                     "y":  5420,
+                     "tier":  3,
+                     "minLevel":  36,
+                     "maxLevel":  37,
+                     "mobCount":  251
+                 },
+                 {
+                     "index":  68,
+                     "name":  "Destroyed Temple Site",
+                     "x":  6464,
+                     "y":  5238,
+                     "tier":  1,
+                     "minLevel":  34,
+                     "maxLevel":  34,
+                     "mobCount":  30
+                 },
+                 {
+                     "index":  70,
+                     "name":  "Rock Tomb Hill",
+                     "x":  5374,
+                     "y":  6185,
+                     "tier":  1,
+                     "minLevel":  32,
+                     "maxLevel":  32,
+                     "mobCount":  15
+                 },
+                 {
+                     "index":  73,
+                     "name":  "Anguish Hill",
+                     "x":  3922,
+                     "y":  4884,
+                     "tier":  0,
+                     "minLevel":  18,
+                     "maxLevel":  18,
+                     "mobCount":  16
+                 },
+                 {
+                     "index":  74,
+                     "name":  "Pamos Farm",
+                     "x":  4171,
+                     "y":  4767,
+                     "tier":  0,
+                     "minLevel":  18,
+                     "maxLevel":  18,
+                     "mobCount":  49
+                 },
+                 {
+                     "index":  75,
+                     "name":  "Dundu\u0027s Rest",
+                     "x":  4561,
+                     "y":  4862,
+                     "tier":  0,
+                     "minLevel":  18,
+                     "maxLevel":  18,
+                     "mobCount":  1
+                 },
+                 {
+                     "index":  82,
+                     "name":  "Drana Plantation",
+                     "x":  6597,
+                     "y":  4229,
+                     "tier":  1,
+                     "minLevel":  40,
+                     "maxLevel":  40,
+                     "mobCount":  11
+                 },
+                 {
+                     "index":  86,
+                     "name":  "Crimson Isle",
+                     "x":  6151,
+                     "y":  2459,
+                     "tier":  0,
+                     "minLevel":  46,
+                     "maxLevel":  48,
+                     "mobCount":  300
+                 },
+                 {
+                     "index":  89,
+                     "name":  "Nahid Brigade Fortress",
+                     "x":  6864,
+                     "y":  3536,
+                     "tier":  1,
+                     "minLevel":  43,
+                     "maxLevel":  45,
+                     "mobCount":  65
+                 }
+             ],
+    "1100":  [
+                 {
+                     "index":  0,
+                     "name":  "Munihelle Forest Outskirts",
+                     "x":  6852,
+                     "y":  4764,
+                     "tier":  0,
+                     "minLevel":  3,
+                     "maxLevel":  4,
+                     "mobCount":  25
+                 },
+                 {
+                     "index":  1,
+                     "name":  "Munihelle Forest",
+                     "x":  6913,
+                     "y":  4572,
+                     "tier":  1,
+                     "minLevel":  3,
+                     "maxLevel":  4,
+                     "mobCount":  41
+                 },
+                 {
+                     "index":  2,
+                     "name":  "Anturn Cliff",
+                     "x":  7080,
+                     "y":  4765,
+                     "tier":  0,
+                     "minLevel":  6,
+                     "maxLevel":  6,
+                     "mobCount":  6
+                 },
+                 {
+                     "index":  3,
+                     "name":  "Azrakar Brigade Guard Camp",
+                     "x":  6940,
+                     "y":  5516,
+                     "tier":  0,
+                     "minLevel":  7,
+                     "maxLevel":  7,
+                     "mobCount":  54
+                 },
+                 {
+                     "index":  4,
+                     "name":  "Tunapre Lake",
+                     "x":  6969,
+                     "y":  4453,
+                     "tier":  1,
+                     "minLevel":  3,
+                     "maxLevel":  4,
+                     "mobCount":  60
+                 },
+                 {
+                     "index":  5,
+                     "name":  "In Front of Azrakar Brigade Prison Compound",
+                     "x":  6588,
+                     "y":  5522,
+                     "tier":  0,
+                     "minLevel":  7,
+                     "maxLevel":  7,
+                     "mobCount":  6
+                 }
+             ],
+    "20":  [
+               {
+                   "index":  0,
+                   "name":  "Reshanta\u0027s Root",
+                   "x":  5006,
+                   "y":  4972,
+                   "tier":  1,
+                   "minLevel":  48,
+                   "maxLevel":  48,
+                   "mobCount":  36
+               },
+               {
+                   "index":  1,
+                   "name":  "Sulfur Tree Island - Branding Island",
+                   "x":  4467,
+                   "y":  4316,
+                   "tier":  1,
+                   "minLevel":  46,
+                   "maxLevel":  46,
+                   "mobCount":  145
+               },
+               {
+                   "index":  2,
+                   "name":  "Archipelago of Siel\u0027s Wings - Grave of Steel",
+                   "x":  5931,
+                   "y":  5346,
+                   "tier":  1,
+                   "minLevel":  46,
+                   "maxLevel":  48,
+                   "mobCount":  58
+               },
+               {
+                   "index":  4,
+                   "name":  "Black Fragments Area - Abandoned Island",
+                   "x":  5720,
+                   "y":  4751,
+                   "tier":  1,
+                   "minLevel":  45,
+                   "maxLevel":  46,
+                   "mobCount":  16
+               },
+               {
+                   "index":  5,
+                   "name":  "Black Fragments Area - Kibelium Fragment",
+                   "x":  5959,
+                   "y":  4504,
+                   "tier":  1,
+                   "minLevel":  45,
+                   "maxLevel":  46,
+                   "mobCount":  30
+               },
+               {
+                   "index":  6,
+                   "name":  "Black Fragments Area - Kration Conflict Zone",
+                   "x":  5623,
+                   "y":  4388,
+                   "tier":  1,
+                   "minLevel":  45,
+                   "maxLevel":  46,
+                   "mobCount":  80
+               },
+               {
+                   "index":  7,
+                   "name":  "Black Fragments Area - Lonely Island",
+                   "x":  5490,
+                   "y":  3996,
+                   "tier":  1,
+                   "minLevel":  45,
+                   "maxLevel":  46,
+                   "mobCount":  20
+               },
+               {
+                   "index":  8,
+                   "name":  "Devastated Remnants - Dusk Battlefield",
+                   "x":  4457,
+                   "y":  5553,
+                   "tier":  1,
+                   "minLevel":  45,
+                   "maxLevel":  46,
+                   "mobCount":  80
+               },
+               {
+                   "index":  9,
+                   "name":  "Devastated Remnants - Shade Island",
+                   "x":  4668,
+                   "y":  5864,
+                   "tier":  1,
+                   "minLevel":  45,
+                   "maxLevel":  46,
+                   "mobCount":  20
+               },
+               {
+                   "index":  11,
+                   "name":  "Devastated Remnants - Exile Island",
+                   "x":  4328,
+                   "y":  5175,
+                   "tier":  1,
+                   "minLevel":  45,
+                   "maxLevel":  46,
+                   "mobCount":  16
+               },
+               {
+                   "index":  12,
+                   "name":  "Devastated Remnants - Weathered Outcrop",
+                   "x":  4128,
+                   "y":  5468,
+                   "tier":  1,
+                   "minLevel":  45,
+                   "maxLevel":  46,
+                   "mobCount":  30
+               },
+               {
+                   "index":  15,
+                   "name":  "Archipelago of Siel\u0027s Wings - Siel\u0027s Right Wing",
+                   "x":  6532,
+                   "y":  5723,
+                   "tier":  3,
+                   "minLevel":  46,
+                   "maxLevel":  49,
+                   "mobCount":  171
+               },
+               {
+                   "index":  16,
+                   "name":  "Archipelago of Siel\u0027s Wings - Siel\u0027s Left Wing",
+                   "x":  5598,
+                   "y":  5908,
+                   "tier":  1,
+                   "minLevel":  46,
+                   "maxLevel":  47,
+                   "mobCount":  242
+               },
+               {
+                   "index":  17,
+                   "name":  "Sulfur Tree Island - River of Rotten Sap",
+                   "x":  3722,
+                   "y":  4526,
+                   "tier":  1,
+                   "minLevel":  46,
+                   "maxLevel":  48,
+                   "mobCount":  102
+               },
+               {
+                   "index":  22,
+                   "name":  "Sulfur Tree Island - Sulfur Swamp",
+                   "x":  4180,
+                   "y":  4011,
+                   "tier":  1,
+                   "minLevel":  46,
+                   "maxLevel":  48,
+                   "mobCount":  72
+               }
+           ],
+    "1111":  [
+                 {
+                     "index":  0,
+                     "name":  "Halabana Canyon",
+                     "x":  4240,
+                     "y":  3827,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  25
+                 },
+                 {
+                     "index":  1,
+                     "name":  "Cursed Snowfield Hideout",
+                     "x":  3043,
+                     "y":  3172,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  10
+                 },
+                 {
+                     "index":  2,
+                     "name":  "Fallen Temple Ruins",
+                     "x":  4697,
+                     "y":  3228,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  17
+                 },
+                 {
+                     "index":  3,
+                     "name":  "Patamor Plains Outskirts",
+                     "x":  4247,
+                     "y":  2709,
+                     "tier":  3,
+                     "minLevel":  46,
+                     "maxLevel":  46,
+                     "mobCount":  29
+                 },
+                 {
+                     "index":  4,
+                     "name":  "Icecap Ridge",
+                     "x":  3655,
+                     "y":  3151,
+                     "tier":  1,
+                     "minLevel":  46,
+                     "maxLevel":  46,
+                     "mobCount":  59
+                 },
+                 {
+                     "index":  5,
+                     "name":  "Nephra Snowfield",
+                     "x":  3156,
+                     "y":  3910,
+                     "tier":  3,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  252
+                 },
+                 {
+                     "index":  6,
+                     "name":  "Iralcig Highland",
+                     "x":  5135,
+                     "y":  3867,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  48,
+                     "mobCount":  353
+                 },
+                 {
+                     "index":  7,
+                     "name":  "Dharvata Surveillance Base",
+                     "x":  2433,
+                     "y":  4186,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  13
+                 },
+                 {
+                     "index":  8,
+                     "name":  "Dinakra Sky Outpost",
+                     "x":  2299,
+                     "y":  5040,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  7
+                 },
+                 {
+                     "index":  9,
+                     "name":  "Ice Canyon Campsite",
+                     "x":  3446,
+                     "y":  2562,
+                     "tier":  1,
+                     "minLevel":  46,
+                     "maxLevel":  46,
+                     "mobCount":  40
+                 },
+                 {
+                     "index":  10,
+                     "name":  "Ashen Campsite",
+                     "x":  4071,
+                     "y":  5561,
+                     "tier":  0,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  24
+                 },
+                 {
+                     "index":  11,
+                     "name":  "Sleet Outpost",
+                     "x":  4219,
+                     "y":  2526,
+                     "tier":  0,
+                     "minLevel":  46,
+                     "maxLevel":  46,
+                     "mobCount":  1
+                 },
+                 {
+                     "index":  12,
+                     "name":  "Patamor Plains",
+                     "x":  3880,
+                     "y":  2853,
+                     "tier":  3,
+                     "minLevel":  46,
+                     "maxLevel":  46,
+                     "mobCount":  66
+                 },
+                 {
+                     "index":  18,
+                     "name":  "Muspel Volcano Zone",
+                     "x":  4992,
+                     "y":  4680,
+                     "tier":  1,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  418
+                 },
+                 {
+                     "index":  19,
+                     "name":  "Kromede\u0027s Island",
+                     "x":  3932,
+                     "y":  3829,
+                     "tier":  0,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  7
+                 },
+                 {
+                     "index":  22,
+                     "name":  "Executioner\u0027s Tower",
+                     "x":  2808,
+                     "y":  3761,
+                     "tier":  0,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  27,
+                     "name":  "Fire Plaza",
+                     "x":  4718,
+                     "y":  5194,
+                     "tier":  0,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  52
+                 }
+             ],
+    "1011":  [
+                 {
+                     "index":  0,
+                     "name":  "Ruberein Highland",
+                     "x":  3972,
+                     "y":  3408,
+                     "tier":  3,
+                     "minLevel":  46,
+                     "maxLevel":  46,
+                     "mobCount":  440
+                 },
+                 {
+                     "index":  1,
+                     "name":  "Lankusis Highland",
+                     "x":  5611,
+                     "y":  3552,
+                     "tier":  1,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  406
+                 },
+                 {
+                     "index":  2,
+                     "name":  "Eiron Hill",
+                     "x":  3892,
+                     "y":  4236,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  402
+                 },
+                 {
+                     "index":  3,
+                     "name":  "Kuriullu Valley",
+                     "x":  5602,
+                     "y":  5047,
+                     "tier":  3,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  132
+                 },
+                 {
+                     "index":  4,
+                     "name":  "Digunaka Forward Base",
+                     "x":  5518,
+                     "y":  2970,
+                     "tier":  1,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  16
+                 },
+                 {
+                     "index":  5,
+                     "name":  "Hidden Vein Outpost",
+                     "x":  5355,
+                     "y":  5045,
+                     "tier":  0,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  28
+                 },
+                 {
+                     "index":  6,
+                     "name":  "Golden Branch Stronghold Ruins",
+                     "x":  5458,
+                     "y":  4072,
+                     "tier":  1,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  8
+                 },
+                 {
+                     "index":  7,
+                     "name":  "Rogue Sky Fortress",
+                     "x":  6128,
+                     "y":  3588,
+                     "tier":  1,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  2
+                 },
+                 {
+                     "index":  8,
+                     "name":  "Suspicious Ruins",
+                     "x":  3413,
+                     "y":  4615,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  30
+                 },
+                 {
+                     "index":  9,
+                     "name":  "Mystic Spring of Anathe",
+                     "x":  3826,
+                     "y":  5011,
+                     "tier":  1,
+                     "minLevel":  48,
+                     "maxLevel":  48,
+                     "mobCount":  160
+                 },
+                 {
+                     "index":  10,
+                     "name":  "Eastern Dartas Plains",
+                     "x":  4816,
+                     "y":  4625,
+                     "tier":  3,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  242
+                 },
+                 {
+                     "index":  11,
+                     "name":  "Eltnen Barrier Tower Ruins",
+                     "x":  4891,
+                     "y":  3885,
+                     "tier":  3,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  195
+                 },
+                 {
+                     "index":  13,
+                     "name":  "Lacephin Village",
+                     "x":  4499,
+                     "y":  4599,
+                     "tier":  0,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  9
+                 },
+                 {
+                     "index":  14,
+                     "name":  "Fractured Land",
+                     "x":  5657,
+                     "y":  4612,
+                     "tier":  1,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  146
+                 },
+                 {
+                     "index":  15,
+                     "name":  "Chloris\u0027s Secret Base",
+                     "x":  5669,
+                     "y":  4359,
+                     "tier":  0,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  5
+                 },
+                 {
+                     "index":  16,
+                     "name":  "Lepharist Research Center Annex",
+                     "x":  6112,
+                     "y":  4961,
+                     "tier":  0,
+                     "minLevel":  49,
+                     "maxLevel":  49,
+                     "mobCount":  4
+                 },
+                 {
+                     "index":  17,
+                     "name":  "Western Dartas Plains",
+                     "x":  4399,
+                     "y":  4233,
+                     "tier":  1,
+                     "minLevel":  47,
+                     "maxLevel":  47,
+                     "mobCount":  281
+                 }
+             ],
+    "1000":  [
+                 {
+                     "index":  0,
+                     "name":  "Daminu Forest",
+                     "x":  4423,
+                     "y":  4121,
+                     "tier":  0,
+                     "minLevel":  3,
+                     "maxLevel":  4,
+                     "mobCount":  74
+                 },
+                 {
+                     "index":  1,
+                     "name":  "Phoenix Sky Island",
+                     "x":  3966,
+                     "y":  3964,
+                     "tier":  1,
+                     "minLevel":  6,
+                     "maxLevel":  6,
+                     "mobCount":  20
+                 },
+                 {
+                     "index":  3,
+                     "name":  "Migzatu Brigade Base",
+                     "x":  5149,
+                     "y":  4132,
+                     "tier":  0,
+                     "minLevel":  7,
+                     "maxLevel":  9,
+                     "mobCount":  18
+                 },
+                 {
+                     "index":  9,
+                     "name":  "Clione Lake",
+                     "x":  4459,
+                     "y":  3813,
+                     "tier":  0,
+                     "minLevel":  4,
+                     "maxLevel":  4,
+                     "mobCount":  49
+                 }
+             ],
+    "1110":  [
+                 {
+                     "index":  0,
+                     "name":  "Fafnite Deposit",
+                     "x":  6547,
+                     "y":  5601,
+                     "tier":  3,
+                     "minLevel":  35,
+                     "maxLevel":  36,
+                     "mobCount":  357
+                 },
+                 {
+                     "index":  1,
+                     "name":  "Nameless Cemetery",
+                     "x":  3104,
+                     "y":  3752,
+                     "tier":  1,
+                     "minLevel":  13,
+                     "maxLevel":  20,
+                     "mobCount":  642
+                 },
+                 {
+                     "index":  2,
+                     "name":  "Moslan Forest",
+                     "x":  4433,
+                     "y":  5451,
+                     "tier":  3,
+                     "minLevel":  21,
+                     "maxLevel":  22,
+                     "mobCount":  408
+                 },
+                 {
+                     "index":  3,
+                     "name":  "Basfelt Ruins",
+                     "x":  6814,
+                     "y":  4038,
+                     "tier":  1,
+                     "minLevel":  14,
+                     "maxLevel":  34,
+                     "mobCount":  606
+                 },
+                 {
+                     "index":  4,
+                     "name":  "Safe Haven",
+                     "x":  3967,
+                     "y":  3319,
+                     "tier":  1,
+                     "minLevel":  11,
+                     "maxLevel":  11,
+                     "mobCount":  68
+                 },
+                 {
+                     "index":  5,
+                     "name":  "Western Gribade Highland",
+                     "x":  6256,
+                     "y":  6190,
+                     "tier":  1,
+                     "minLevel":  14,
+                     "maxLevel":  37,
+                     "mobCount":  190
+                 },
+                 {
+                     "index":  6,
+                     "name":  "Eastern Gribade Highland",
+                     "x":  7200,
+                     "y":  5738,
+                     "tier":  3,
+                     "minLevel":  40,
+                     "maxLevel":  40,
+                     "mobCount":  247
+                 },
+                 {
+                     "index":  7,
+                     "name":  "Battlescar Mound",
+                     "x":  5951,
+                     "y":  3457,
+                     "tier":  1,
+                     "minLevel":  32,
+                     "maxLevel":  32,
+                     "mobCount":  378
+                 },
+                 {
+                     "index":  8,
+                     "name":  "Sanctum Outpost",
+                     "x":  2952,
+                     "y":  4856,
+                     "tier":  1,
+                     "minLevel":  19,
+                     "maxLevel":  20,
+                     "mobCount":  295
+                 },
+                 {
+                     "index":  9,
+                     "name":  "Purifying Forest",
+                     "x":  5745,
+                     "y":  4011,
+                     "tier":  3,
+                     "minLevel":  26,
+                     "maxLevel":  30,
+                     "mobCount":  977
+                 },
+                 {
+                     "index":  10,
+                     "name":  "Impetusium Square",
+                     "x":  6733,
+                     "y":  7104,
+                     "tier":  1,
+                     "minLevel":  44,
+                     "maxLevel":  44,
+                     "mobCount":  60
+                 },
+                 {
+                     "index":  11,
+                     "name":  "Silent Hill",
+                     "x":  2799,
+                     "y":  4385,
+                     "tier":  1,
+                     "minLevel":  13,
+                     "maxLevel":  18,
+                     "mobCount":  246
+                 },
+                 {
+                     "index":  12,
+                     "name":  "Dranactus",
+                     "x":  5700,
+                     "y":  2960,
+                     "tier":  1,
+                     "minLevel":  32,
+                     "maxLevel":  32,
+                     "mobCount":  316
+                 },
+                 {
+                     "index":  13,
+                     "name":  "Latrima Outpost",
+                     "x":  6051,
+                     "y":  3034,
+                     "tier":  1,
+                     "minLevel":  28,
+                     "maxLevel":  28,
+                     "mobCount":  13
+                 },
+                 {
+                     "index":  14,
+                     "name":  "Barahta Extermination Unit Outpost",
+                     "x":  7340,
+                     "y":  6257,
+                     "tier":  1,
+                     "minLevel":  40,
+                     "maxLevel":  40,
+                     "mobCount":  10
+                 },
+                 {
+                     "index":  15,
+                     "name":  "Andsha Forward Base",
+                     "x":  7193,
+                     "y":  6889,
+                     "tier":  1,
+                     "minLevel":  44,
+                     "maxLevel":  44,
+                     "mobCount":  27
+                 },
+                 {
+                     "index":  16,
+                     "name":  "Amurahta Surveillance Base",
+                     "x":  6273,
+                     "y":  7203,
+                     "tier":  0,
+                     "minLevel":  41,
+                     "maxLevel":  41,
+                     "mobCount":  13
+                 },
+                 {
+                     "index":  18,
+                     "name":  "Immortal Isle",
+                     "x":  2535,
+                     "y":  7757,
+                     "tier":  1,
+                     "minLevel":  49,
+                     "maxLevel":  50,
+                     "mobCount":  638
+                 },
+                 {
+                     "index":  20,
+                     "name":  "Black Claw Village",
+                     "x":  5980,
+                     "y":  6995,
+                     "tier":  1,
+                     "minLevel":  41,
+                     "maxLevel":  42,
+                     "mobCount":  537
+                 },
+                 {
+                     "index":  22,
+                     "name":  "Dredgion Crash Site",
+                     "x":  4225,
+                     "y":  4004,
+                     "tier":  3,
+                     "minLevel":  10,
+                     "maxLevel":  12,
+                     "mobCount":  314
+                 },
+                 {
+                     "index":  23,
+                     "name":  "Granach\u0027s Hideout",
+                     "x":  7422,
+                     "y":  5454,
+                     "tier":  1,
+                     "minLevel":  40,
+                     "maxLevel":  40,
+                     "mobCount":  3
+                 },
+                 {
+                     "index":  24,
+                     "name":  "Tranein Highland",
+                     "x":  3580,
+                     "y":  4599,
+                     "tier":  1,
+                     "minLevel":  14,
+                     "maxLevel":  20,
+                     "mobCount":  787
+                 },
+                 {
+                     "index":  25,
+                     "name":  "Tranein Pond",
+                     "x":  3543,
+                     "y":  4681,
+                     "tier":  0,
+                     "minLevel":  20,
+                     "maxLevel":  20,
+                     "mobCount":  108
+                 },
+                 {
+                     "index":  26,
+                     "name":  "Abandoned Campsite",
+                     "x":  6324,
+                     "y":  5926,
+                     "tier":  0,
+                     "minLevel":  37,
+                     "maxLevel":  37,
+                     "mobCount":  2
+                 },
+                 {
+                     "index":  27,
+                     "name":  "Amunta\u0027s Hideout",
+                     "x":  7106,
+                     "y":  5752,
+                     "tier":  0,
+                     "minLevel":  40,
+                     "maxLevel":  45,
+                     "mobCount":  7
+                 },
+                 {
+                     "index":  28,
+                     "name":  "Calderon Canyon",
+                     "x":  3797,
+                     "y":  4240,
+                     "tier":  1,
+                     "minLevel":  11,
+                     "maxLevel":  16,
+                     "mobCount":  48
+                 },
+                 {
+                     "index":  29,
+                     "name":  "Odyle Jelly Storage",
+                     "x":  4255,
+                     "y":  4624,
+                     "tier":  1,
+                     "minLevel":  16,
+                     "maxLevel":  16,
+                     "mobCount":  10
+                 },
+                 {
+                     "index":  30,
+                     "name":  "Crash Site Cave",
+                     "x":  4416,
+                     "y":  4680,
+                     "tier":  1,
+                     "minLevel":  22,
+                     "maxLevel":  22,
+                     "mobCount":  4
+                 },
+                 {
+                     "index":  31,
+                     "name":  "Grisilla\u0027s Hideout",
+                     "x":  4903,
+                     "y":  4189,
+                     "tier":  0,
+                     "minLevel":  30,
+                     "maxLevel":  30,
+                     "mobCount":  13
+                 },
+                 {
+                     "index":  32,
+                     "name":  "Hermit\u0027s Cave",
+                     "x":  4716,
+                     "y":  4957,
+                     "tier":  1,
+                     "minLevel":  22,
+                     "maxLevel":  22,
+                     "mobCount":  11
+                 },
+                 {
+                     "index":  33,
+                     "name":  "Fang Hideout",
+                     "x":  3277,
+                     "y":  4375,
+                     "tier":  1,
+                     "minLevel":  18,
+                     "maxLevel":  18,
+                     "mobCount":  3
+                 },
+                 {
+                     "index":  35,
+                     "name":  "Highland Cave",
+                     "x":  7422,
+                     "y":  6733,
+                     "tier":  3,
+                     "minLevel":  45,
+                     "maxLevel":  45,
+                     "mobCount":  13
+                 },
+                 {
+                     "index":  36,
+                     "name":  "Black Claw Storage",
+                     "x":  6119,
+                     "y":  7416,
+                     "tier":  1,
+                     "minLevel":  41,
+                     "maxLevel":  45,
+                     "mobCount":  3
+                 },
+                 {
+                     "index":  37,
+                     "name":  "Sanctum Dumpsite",
+                     "x":  2746,
+                     "y":  5119,
+                     "tier":  1,
+                     "minLevel":  19,
+                     "maxLevel":  19,
+                     "mobCount":  3
+                 },
+                 {
+                     "index":  38,
+                     "name":  "Galorik\u0027s Inspection Area",
+                     "x":  3834,
+                     "y":  3770,
+                     "tier":  0,
+                     "minLevel":  10,
+                     "maxLevel":  10,
+                     "mobCount":  1
+                 },
+                 {
+                     "index":  40,
+                     "name":  "Quai Campsite",
+                     "x":  3642,
+                     "y":  4188,
+                     "tier":  0,
+                     "minLevel":  13,
+                     "maxLevel":  13,
+                     "mobCount":  2
+                 },
+                 {
+                     "index":  43,
+                     "name":  "Uruthumheim",
+                     "x":  5285,
+                     "y":  4696,
+                     "tier":  1,
+                     "minLevel":  24,
+                     "maxLevel":  24,
+                     "mobCount":  54
+                 },
+                 {
+                     "index":  45,
+                     "name":  "Lagta Fortress",
+                     "x":  4891,
+                     "y":  6972,
+                     "tier":  1,
+                     "minLevel":  43,
+                     "maxLevel":  43,
+                     "mobCount":  17
+                 },
+                 {
+                     "index":  46,
+                     "name":  "Nornir Assembly",
+                     "x":  5779,
+                     "y":  4594,
+                     "tier":  0,
+                     "minLevel":  26,
+                     "maxLevel":  26,
+                     "mobCount":  4
+                 },
+                 {
+                     "index":  47,
+                     "name":  "Watchtower Camp",
+                     "x":  5908,
+                     "y":  3211,
+                     "tier":  1,
+                     "minLevel":  32,
+                     "maxLevel":  32,
+                     "mobCount":  7
+                 },
+                 {
+                     "index":  48,
+                     "name":  "Mahindel River",
+                     "x":  6751,
+                     "y":  5137,
+                     "tier":  0,
+                     "minLevel":  34,
+                     "maxLevel":  40,
+                     "mobCount":  24
+                 },
+                 {
+                     "index":  49,
+                     "name":  "Southern Gribade Highland",
+                     "x":  6805,
+                     "y":  6293,
+                     "tier":  0,
+                     "minLevel":  40,
+                     "maxLevel":  40,
+                     "mobCount":  164
+                 },
+                 {
+                     "index":  50,
+                     "name":  "Spirit Isle",
+                     "x":  7779,
+                     "y":  2256,
+                     "tier":  2,
+                     "minLevel":  46,
+                     "maxLevel":  48,
+                     "mobCount":  334
+                 },
+                 {
+                     "index":  58,
+                     "name":  "North Laborer\u0027s Tent",
+                     "x":  5568,
+                     "y":  2915,
+                     "tier":  0,
+                     "minLevel":  32,
+                     "maxLevel":  32,
+                     "mobCount":  3
+                 },
+                 {
+                     "index":  68,
+                     "name":  "Mahindel Cliff",
+                     "x":  6686,
+                     "y":  4771,
+                     "tier":  0,
+                     "minLevel":  34,
+                     "maxLevel":  34,
+                     "mobCount":  15
+                 },
+                 {
+                     "index":  70,
+                     "name":  "Idun\u0027s Lake",
+                     "x":  6910,
+                     "y":  6139,
+                     "tier":  0,
+                     "minLevel":  40,
+                     "maxLevel":  40,
+                     "mobCount":  38
+                 },
+                 {
+                     "index":  76,
+                     "name":  "Crypt",
+                     "x":  2887,
+                     "y":  3539,
+                     "tier":  0,
+                     "minLevel":  13,
+                     "maxLevel":  13,
+                     "mobCount":  7
+                 },
+                 {
+                     "index":  81,
+                     "name":  "Kumrica\u0027s Cellar",
+                     "x":  6011,
+                     "y":  6855,
+                     "tier":  0,
+                     "minLevel":  41,
+                     "maxLevel":  41,
+                     "mobCount":  2
+                 },
+                 {
+                     "index":  90,
+                     "name":  "South Laborer\u0027s Tent",
+                     "x":  5576,
+                     "y":  3129,
+                     "tier":  0,
+                     "minLevel":  32,
+                     "maxLevel":  32,
+                     "mobCount":  6
+                 },
+                 {
+                     "index":  92,
+                     "name":  "Munin\u0027s Bridge",
+                     "x":  3976,
+                     "y":  4773,
+                     "tier":  0,
+                     "minLevel":  19,
+                     "maxLevel":  20,
+                     "mobCount":  3
+                 }
+             ]
+}

@@ -1736,6 +1736,7 @@ function buildOverlayPayload() {
           y: sp.y,
           petId: r.id,
           name: r.primaryMonsterName,
+          genus: r.genus || "feral",
           isLevel3: r.isLevel3
         });
       }
