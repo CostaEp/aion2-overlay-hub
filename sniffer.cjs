@@ -182,7 +182,7 @@ function getDefaultWorldForRace(race) {
   return race === "light" ? "1010" : "1110";
 }
 
-function updateMapAndArea(mapId, x, y, z, isManual = false) {
+function updateMapAndArea(mapId, x, y, z, isManual = false, heading = null) {
   if (mapId !== undefined && mapId !== null && mapId !== "") {
     const mapStr = String(mapId);
     const w = db.worlds[mapStr];
@@ -224,6 +224,9 @@ function updateMapAndArea(mapId, x, y, z, isManual = false) {
     state.location.y = Math.round(y);
     if (typeof z === "number") state.location.z = Math.round(z);
     state.location.updatedAt = Date.now();
+  }
+  if (typeof heading === "number" && !isNaN(heading)) {
+    state.location.heading = Math.round(heading);
   }
   if (state.location.mapId && state.location.x !== null && state.location.y !== null && !state.location.inInstance) {
     const area = findAreaAt(state.location.mapId, state.location.x, state.location.y);
@@ -949,9 +952,17 @@ function handleDecodedPacket(pkt) {
     case "CharMoveStart_NT":
     case "CharMoveUpdateSnapshot_NT":
     case "CharMoveStop_NT": {
-      const { key, pos } = pkt.data;
+      const { key, pos, rotateDir, moveDir } = pkt.data;
       if (key === state.selfEntity) {
-        updateMapAndArea(null, pos.x, pos.y, pos.z);
+        let heading = null;
+        if (typeof rotateDir === "number") {
+          heading = (rotateDir / 65536.0) * 360.0;
+        } else if (typeof moveDir === "number") {
+          heading = (moveDir / 65536.0) * 360.0;
+        } else if (typeof pkt.data.dir === "number") {
+          heading = (pkt.data.dir * 180.0) / Math.PI;
+        }
+        updateMapAndArea(null, pos.x, pos.y, pos.z, false, heading);
         dirty = true;
       } else {
         const npc = state.liveNpcs.get(key);
@@ -1735,7 +1746,9 @@ function buildOverlayPayload() {
       missingSoulsAll: totalMissingSoulsAll
     },
     miniMap: {
+      worldId: curMapId,
       player: playerMapCoords,
+      playerHeading: state.location.heading ?? null,
       areaName: curAreaName,
       areaPolygons,
       allAreas,
