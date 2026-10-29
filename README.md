@@ -126,29 +126,6 @@ $wpf = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF"
 
 ---
 
-## 🏷️ Git Versioning & Release Workflow
-
-כדי לנהל גרסאות בצורה מסודרת ב-Git:
-
-```bash
-# 1. בדיקת סטטוס קבצים
-git status
-
-# 2. הוספת כל השינויים
-git add Overlay.cs sniffer.cjs Aion2PetsOverlay.exe README.md data/chests-db.json data/area-levels.json data/crafting-wishlist.json
-
-# 3. יצירת Commit גרסה
-git commit -m "feat(v2.5.0): Add Crafting Tracker, MetaRoad Level Guide, Hidden Cubes, and Soul Stone colors"
-
-# 4. יצירת Git Tag לגרסה
-git tag -a v2.5.0 -m "Release v2.5.0: Crafting Wishlist, MetaRoad Mini-Map & Soul Stone Genus Colors"
-
-# 5. דחיפה ל-GitHub כולל תגיות
-git push origin main --tags
-```
-
----
-
 ## 📁 Repository Structure
 
 ```text
