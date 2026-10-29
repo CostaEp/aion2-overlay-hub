@@ -220,6 +220,15 @@ function updateMapAndArea(mapId, x, y, z, isManual = false, heading = null) {
   }
 
   if (typeof x === "number" && typeof y === "number") {
+    if (heading === null && state.location.x !== null && state.location.y !== null) {
+      const dx = x - state.location.x;
+      const dy = -(y - state.location.y);
+      if (Math.hypot(dx, dy) > 20) {
+        let deg = (Math.atan2(dx, dy) * 180) / Math.PI;
+        if (deg < 0) deg += 360;
+        state.location.heading = Math.round(deg);
+      }
+    }
     state.location.x = Math.round(x);
     state.location.y = Math.round(y);
     if (typeof z === "number") state.location.z = Math.round(z);
@@ -355,6 +364,9 @@ function syncFromQuestlogFiles() {
     const list = Object.values(charsFile.characters).sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
     const active = list.find(c => c.name === state.character.name) || list[0];
     if (active) {
+      if (active.entity && !state.selfEntity) {
+        state.selfEntity = active.entity;
+      }
       if (!state.character.name) state.character.name = active.name;
       if (!state.character.server) state.character.server = active.server;
       if (!state.character.class) state.character.class = active.class;
@@ -1677,12 +1689,21 @@ function buildOverlayPayload() {
   for (const r of rows) {
     if (r.spawnsInCurrentMap <= 0 && r.aroundCount <= 0) continue;
     const spList = curMapId ? (db.pets.find(p => p.id === r.id)?.spawnsByWorld[curMapId] || []) : [];
-    const filteredSp = curAreaId && r.spawnsInCurrentArea > 0
-      ? spList.filter(s => s.areaId === curAreaId)
-      : spList;
-    if (filteredSp.length > 0) {
+    if (spList.length === 0) continue;
+
+    const mobLevel = (r.monsters && r.monsters.length > 0 && r.monsters[0].level) ? r.monsters[0].level : 0;
+
+    // Group spawns by area so we get proper clusters across the whole world
+    const areaGroups = new Map();
+    for (const sp of spList) {
+      const aId = sp.areaId || "unknown";
+      if (!areaGroups.has(aId)) areaGroups.set(aId, []);
+      areaGroups.get(aId).push(sp);
+    }
+
+    for (const [aId, gSpawns] of areaGroups.entries()) {
       let sx = 0, sy = 0;
-      for (const sp of filteredSp) {
+      for (const sp of gSpawns) {
         sx += sp.x;
         sy += sp.y;
       }
@@ -1690,24 +1711,33 @@ function buildOverlayPayload() {
         petId: r.id,
         petName: r.name,
         monsterName: r.primaryMonsterName,
-        x: Math.round(sx / filteredSp.length),
-        y: Math.round(sy / filteredSp.length),
-        count: filteredSp.length,
-        aroundCount: r.aroundCount,
-        inCurrentArea: r.spawnsInCurrentArea > 0,
+        level: mobLevel,
+        genus: r.genus || "feral",
+        areaId: aId,
+        areaName: gSpawns[0]?.areaName || "",
+        x: Math.round(sx / gSpawns.length),
+        y: Math.round(sy / gSpawns.length),
+        count: gSpawns.length,
+        aroundCount: (aId === curAreaId) ? r.aroundCount : 0,
+        inCurrentArea: (aId === curAreaId),
         isLevel3: r.isLevel3,
         remainingToLevel3: r.remainingToLevel3
       });
-      if (r.spawnsInCurrentArea > 0 || r.aroundCount > 0) {
-        for (const sp of filteredSp.slice(0, 50)) {
-          miniMapSpawns.push({
-            x: sp.x,
-            y: sp.y,
-            petId: r.id,
-            name: r.primaryMonsterName,
-            isLevel3: r.isLevel3
-          });
-        }
+    }
+
+    // Include individual spawn dots for current area or if around
+    if (r.spawnsInCurrentArea > 0 || r.aroundCount > 0) {
+      const focusSpawns = (curAreaId && r.spawnsInCurrentArea > 0)
+        ? spList.filter(s => s.areaId === curAreaId)
+        : spList;
+      for (const sp of focusSpawns.slice(0, 35)) {
+        miniMapSpawns.push({
+          x: sp.x,
+          y: sp.y,
+          petId: r.id,
+          name: r.primaryMonsterName,
+          isLevel3: r.isLevel3
+        });
       }
     }
   }

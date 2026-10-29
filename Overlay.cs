@@ -242,6 +242,25 @@ namespace Aion2PetsOverlay
         private double? _lastPlayerHeading;
         private double? _prevPlayerX;
         private double? _prevPlayerY;
+        private bool _compassRotateMode = true;
+        private bool _showCubes = true;
+        private bool _showAllMonsters = true;
+        private readonly string _chestsFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "chests-db.json");
+        private Dictionary<string, object> _chestsDb = null;
+
+        private void LoadChestsDb()
+        {
+            try
+            {
+                if (File.Exists(_chestsFilePath))
+                {
+                    string json = File.ReadAllText(_chestsFilePath, Encoding.UTF8);
+                    JavaScriptSerializer ser = new JavaScriptSerializer { MaxJsonLength = 50000000 };
+                    _chestsDb = ser.Deserialize<Dictionary<string, object>>(json);
+                }
+            }
+            catch { }
+        }
 
         // Cards List
         private StackPanel _cardsStack;
@@ -273,6 +292,7 @@ namespace Aion2PetsOverlay
             _qlTrackerPath = System.IO.Path.Combine(_questlogDir, "map-tracker.json");
 
             try { if (!Directory.Exists(_iconsDir)) Directory.CreateDirectory(_iconsDir); } catch { }
+            LoadChestsDb();
 
             Title = "Aion 2 Overlay Hub";
             Width = 460;
@@ -1183,8 +1203,23 @@ namespace Aion2PetsOverlay
                     Point cur = e.GetPosition(_miniMapCanvas);
                     double dx = cur.X - _mapDragStart.X;
                     double dy = cur.Y - _mapDragStart.Y;
-                    _mapPanX -= (dx * 16.0) / _mapZoom;
-                    _mapPanY += (dy * 16.0) / _mapZoom;
+                    double curScale = 0.0045 * _mapZoom;
+                    if (curScale > 0.00001)
+                    {
+                        if (_compassRotateMode)
+                        {
+                            double rad = (_lastPlayerHeading ?? 0.0) * (Math.PI / 180.0);
+                            double rotDx = dx * Math.Cos(rad) - dy * Math.Sin(rad);
+                            double rotDy = dx * Math.Sin(rad) + dy * Math.Cos(rad);
+                            _mapPanX -= rotDx / curScale;
+                            _mapPanY += rotDy / curScale;
+                        }
+                        else
+                        {
+                            _mapPanX -= dx / curScale;
+                            _mapPanY += dy / curScale;
+                        }
+                    }
                     _mapDragStart = cur;
                     RenderMiniMap();
                 }
@@ -1197,7 +1232,7 @@ namespace Aion2PetsOverlay
             _miniMapCanvas.MouseWheel += (s, e) =>
             {
                 if (e.Delta > 0) _mapZoom = Math.Min(4.0, _mapZoom * 1.25);
-                else _mapZoom = Math.Max(0.4, _mapZoom / 1.25);
+                else _mapZoom = Math.Max(0.06, _mapZoom / 1.25);
                 RenderMiniMap();
             };
             _miniMapCanvas.MouseDown += (s, e) =>
@@ -1220,10 +1255,34 @@ namespace Aion2PetsOverlay
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(6)
             };
-            Button btnZoomIn = CreateSmallMapBtn("+", () => { _mapZoom = Math.Min(4.0, _mapZoom * 1.3); RenderMiniMap(); });
-            Button btnZoomOut = CreateSmallMapBtn("−", () => { _mapZoom = Math.Max(0.4, _mapZoom / 1.3); RenderMiniMap(); });
+            Button btnCompass = CreateSmallMapBtn(_compassRotateMode ? "🧭" : "⬆", () =>
+            {
+                _compassRotateMode = !_compassRotateMode;
+                RenderMiniMap();
+            });
+            btnCompass.ToolTip = Tr("מצב מצפן / מפה מסתובבת", "Compass / Rotating mode", "Режим компаса");
+
+            Button btnCubes = CreateSmallMapBtn(_showCubes ? "📦" : "▫", () =>
+            {
+                _showCubes = !_showCubes;
+                RenderMiniMap();
+            });
+            btnCubes.ToolTip = Tr("הצג/הסתר קוביות", "Show/Hide Cubes", "Показать сундуки");
+
+            Button btnMonsters = CreateSmallMapBtn(_showAllMonsters ? "🐾" : "👁", () =>
+            {
+                _showAllMonsters = !_showAllMonsters;
+                RenderMiniMap();
+            });
+            btnMonsters.ToolTip = Tr("הצג את כל יצורי העולם", "Show All World Creatures", "Все существа мира");
+
+            Button btnZoomIn = CreateSmallMapBtn("+", () => { _mapZoom = Math.Min(4.0, _mapZoom * 1.35); RenderMiniMap(); });
+            Button btnZoomOut = CreateSmallMapBtn("−", () => { _mapZoom = Math.Max(0.06, _mapZoom / 1.35); RenderMiniMap(); });
             Button btnRecenter = CreateSmallMapBtn("🎯", () => { _mapZoom = 1.0; _mapPanX = 0; _mapPanY = 0; _selectedPetId = 0; RenderMiniMap(); });
             Button btnExpand = CreateSmallMapBtn("⤢", () => { _miniMapBorder.Height = (_miniMapBorder.Height <= 190) ? 330 : 180; });
+            zoomBtns.Children.Add(btnCompass);
+            zoomBtns.Children.Add(btnCubes);
+            zoomBtns.Children.Add(btnMonsters);
             zoomBtns.Children.Add(btnZoomIn);
             zoomBtns.Children.Add(btnZoomOut);
             zoomBtns.Children.Add(btnRecenter);
@@ -2199,7 +2258,7 @@ namespace Aion2PetsOverlay
                         double dy = playerMapY.Value - _prevPlayerY.Value;
                         if (Math.Sqrt(dx * dx + dy * dy) > 20)
                         {
-                            double angle = Math.Atan2(dx, dy) * (180.0 / Math.PI);
+                            double angle = Math.Atan2(dx, -dy) * (180.0 / Math.PI);
                             if (angle < 0) angle += 360.0;
                             _lastPlayerHeading = angle;
                         }
@@ -3131,13 +3190,31 @@ namespace Aion2PetsOverlay
             cx += _mapPanX;
             cy += _mapPanY;
 
-            double scale = (1.0 / 16.0) * _mapZoom;
+            double baseScale = 0.0045;
+            double scale = baseScale * _mapZoom;
             Func<double, double, Point> toScreen = (gx, gy) =>
             {
                 double sx = w / 2 + (gx - cx) * scale;
                 double sy = h / 2 - (gy - cy) * scale;
                 return new Point(sx, sy);
             };
+
+            // Rotating world container (rotates around player in compass mode)
+            Canvas worldCanvas = new Canvas
+            {
+                Width = w,
+                Height = h,
+                Background = Brushes.Transparent,
+                ClipToBounds = true
+            };
+
+            double curHeading = GetDouble(mm, "playerHeading", _lastPlayerHeading ?? 0.0);
+            Point pp = hasPlayer ? toScreen(Convert.ToDouble(playerArr[0]), Convert.ToDouble(playerArr[1])) : new Point(w / 2, h / 2);
+
+            if (_compassRotateMode && hasPlayer)
+            {
+                worldCanvas.RenderTransform = new RotateTransform(-curHeading, pp.X, pp.Y);
+            }
 
             // 1. Draw High-Resolution World Game Map Terrain
             string worldId = GetStr(mm, "worldId", "1110");
@@ -3158,38 +3235,98 @@ namespace Aion2PetsOverlay
                     IsHitTestVisible = false,
                     Opacity = 0.94
                 };
+                RenderOptions.SetBitmapScalingMode(mapImg, BitmapScalingMode.HighQuality);
                 Canvas.SetLeft(mapImg, mapTopLeft.X);
                 Canvas.SetTop(mapImg, mapTopLeft.Y);
-                _miniMapCanvas.Children.Add(mapImg);
+                worldCanvas.Children.Add(mapImg);
             }
 
             // 2. Radar Distance Rings (50m, 100m, 200m) around player
             if (hasPlayer)
             {
-                Point pp = toScreen(Convert.ToDouble(playerArr[0]), Convert.ToDouble(playerArr[1]));
                 foreach (int mDist in new int[] { 50, 100, 200 })
                 {
                     double rPix = (mDist * 100.0) * scale;
-                    if (rPix > 10 && rPix < Math.Max(w, h) * 1.6)
+                    if (rPix > 10 && rPix < Math.Max(w, h) * 2.0)
                     {
                         Ellipse ring = new Ellipse
                         {
                             Width = rPix * 2,
                             Height = rPix * 2,
-                            Stroke = new SolidColorBrush(Color.FromArgb(35, 56, 189, 248)),
+                            Stroke = new SolidColorBrush(Color.FromArgb(40, 56, 189, 248)),
                             StrokeDashArray = new DoubleCollection { 2, 2 },
                             StrokeThickness = 1,
                             IsHitTestVisible = false
                         };
                         Canvas.SetLeft(ring, pp.X - rPix);
                         Canvas.SetTop(ring, pp.Y - rPix);
-                        _miniMapCanvas.Children.Add(ring);
+                        worldCanvas.Children.Add(ring);
                     }
                 }
             }
 
-            // 3. Spawns Dots
-            if (spawnsArr != null)
+            // 3. Hidden Cubes / Mystery Chests
+            int nearbyCubesCount = 0;
+            if (_showCubes && _chestsDb != null && _chestsDb.ContainsKey(worldId))
+            {
+                var chestList = _chestsDb[worldId] as ArrayList;
+                if (chestList != null)
+                {
+                    foreach (object cObj in chestList)
+                    {
+                        var ch = cObj as Dictionary<string, object>;
+                        if (ch == null) continue;
+                        string chName = GetStr(ch, "name", "Hidden Cube");
+                        var pts = ch.ContainsKey("points") ? ch["points"] as ArrayList : null;
+                        if (pts == null) continue;
+
+                        foreach (object ptObj in pts)
+                        {
+                            var pt = ptObj as Dictionary<string, object>;
+                            if (pt == null) continue;
+                            double gx = GetDouble(pt, "x", 0);
+                            double gy = GetDouble(pt, "y", 0);
+
+                            if (hasPlayer)
+                            {
+                                double px = Convert.ToDouble(playerArr[0]);
+                                double py = Convert.ToDouble(playerArr[1]);
+                                if (Math.Sqrt((gx - px) * (gx - px) + (gy - py) * (gy - py)) < 50000)
+                                {
+                                    nearbyCubesCount++;
+                                }
+                            }
+
+                            Point cp = toScreen(gx, gy);
+                            if (cp.X < -30 || cp.X > w + 30 || cp.Y < -30 || cp.Y > h + 30) continue;
+
+                            // Cube Marker: Golden/Amber glowing diamond
+                            System.Windows.Shapes.Path cubeIcon = new System.Windows.Shapes.Path
+                            {
+                                Data = Geometry.Parse("M 0,-7 L 7,0 L 0,7 L -7,0 Z"),
+                                Fill = new SolidColorBrush(Color.FromRgb(245, 158, 11)),
+                                Stroke = Brushes.White,
+                                StrokeThickness = 1.0,
+                                IsHitTestVisible = true,
+                                ToolTip = "📦 " + chName + " (" + Tr("קוביה מוסתרת", "Hidden Cube", "Скрытый сундук") + ")"
+                            };
+
+                            if (_compassRotateMode)
+                            {
+                                cubeIcon.RenderTransformOrigin = new Point(0.5, 0.5);
+                                cubeIcon.RenderTransform = new RotateTransform(curHeading);
+                            }
+
+                            Canvas.SetLeft(cubeIcon, cp.X);
+                            Canvas.SetTop(cubeIcon, cp.Y);
+                            worldCanvas.Children.Add(cubeIcon);
+                        }
+                    }
+                }
+            }
+
+            // 4. Spawns Dots
+            if (spawnsArr != null && _mapZoom >= 0.25)
             {
                 foreach (object spObj in spawnsArr)
                 {
@@ -3217,11 +3354,11 @@ namespace Aion2PetsOverlay
                     };
                     Canvas.SetLeft(dot, p.X - dot.Width / 2);
                     Canvas.SetTop(dot, p.Y - dot.Height / 2);
-                    _miniMapCanvas.Children.Add(dot);
+                    worldCanvas.Children.Add(dot);
                 }
             }
 
-            // 4. Labeled Monster Clusters
+            // 5. Labeled Monster Clusters
             if (clustersArr != null)
             {
                 foreach (object cObj in clustersArr)
@@ -3236,47 +3373,69 @@ namespace Aion2PetsOverlay
                     int aroundCnt = GetInt(cd, "aroundCount", 0);
                     bool isSel = (cPetId == _selectedPetId);
 
-                    if (_currentTab == "around" && aroundCnt <= 0 && !isSel) continue;
-                    if (_currentTab == "area" && !inCurArea && aroundCnt <= 0 && !isSel) continue;
+                    // When zoomed in and not showing all, apply tab filter
+                    if (!_showAllMonsters && _mapZoom >= 0.4)
+                    {
+                        if (_currentTab == "around" && aroundCnt <= 0 && !isSel) continue;
+                        if (_currentTab == "area" && !inCurArea && aroundCnt <= 0 && !isSel) continue;
+                    }
 
                     Point cp = toScreen(GetDouble(cd, "x", 0), GetDouble(cd, "y", 0));
-                    if (cp.X < -30 || cp.X > w + 30 || cp.Y < -15 || cp.Y > h + 15) continue;
+                    if (cp.X < -60 || cp.X > w + 60 || cp.Y < -40 || cp.Y > h + 40) continue;
 
                     string mobName = GetStr(cd, "monsterName", "");
+                    int mobLv = GetInt(cd, "level", 0);
+                    string genus = GetStr(cd, "genus", "");
                     int cnt = GetInt(cd, "count", 0);
+
+                    string tagText = "";
+                    if (mobLv > 0) tagText += "Lv." + mobLv + " ";
+                    tagText += mobName;
+                    if (_mapZoom >= 0.3 && cnt > 1) tagText += " ×" + cnt;
 
                     Border tagBorder = new Border
                     {
                         Background = isSel
                             ? new SolidColorBrush(Color.FromArgb(240, 180, 83, 9))
                             : (aroundCnt > 0
-                                ? new SolidColorBrush(Color.FromArgb(230, 6, 95, 70))
-                                : new SolidColorBrush(Color.FromArgb(215, 15, 23, 42))),
+                                ? new SolidColorBrush(Color.FromArgb(235, 6, 95, 70))
+                                : (inCurArea
+                                    ? new SolidColorBrush(Color.FromArgb(220, 15, 23, 42))
+                                    : new SolidColorBrush(Color.FromArgb(180, 15, 23, 42)))),
                         BorderBrush = isSel
                             ? new SolidColorBrush(Color.FromRgb(251, 191, 36))
                             : (aroundCnt > 0
                                 ? new SolidColorBrush(Color.FromRgb(52, 211, 153))
-                                : new SolidColorBrush(Color.FromArgb(160, 56, 189, 248))),
+                                : (inCurArea
+                                    ? new SolidColorBrush(Color.FromArgb(160, 56, 189, 248))
+                                    : new SolidColorBrush(Color.FromArgb(90, 100, 116, 139)))),
                         BorderThickness = new Thickness(1),
-                        CornerRadius = new CornerRadius(4),
-                        Padding = new Thickness(4, 1, 4, 1),
+                        CornerRadius = new CornerRadius(3.5),
+                        Padding = new Thickness(3.5, 1, 3.5, 1),
                         IsHitTestVisible = false
                     };
+
+                    if (_compassRotateMode)
+                    {
+                        tagBorder.RenderTransformOrigin = new Point(0.5, 0.5);
+                        tagBorder.RenderTransform = new RotateTransform(curHeading);
+                    }
+
                     tagBorder.Child = new TextBlock
                     {
-                        Text = mobName + " ×" + cnt,
-                        Foreground = Brushes.White,
-                        FontSize = 9.5,
-                        FontWeight = FontWeights.Bold
+                        Text = tagText,
+                        Foreground = isSel ? Brushes.White : (isLv3 ? new SolidColorBrush(Color.FromRgb(148, 163, 184)) : Brushes.White),
+                        FontSize = _mapZoom < 0.3 ? 8.5 : 9.2,
+                        FontWeight = isSel || aroundCnt > 0 ? FontWeights.Bold : FontWeights.Normal
                     };
 
-                    Canvas.SetLeft(tagBorder, cp.X - 28);
+                    Canvas.SetLeft(tagBorder, cp.X - 25);
                     Canvas.SetTop(tagBorder, cp.Y - 8);
-                    _miniMapCanvas.Children.Add(tagBorder);
+                    worldCanvas.Children.Add(tagBorder);
                 }
             }
 
-            // 5. Live Nearby Monsters (Live Radar)
+            // 6. Live Nearby Monsters (Live Radar)
             if (liveArr != null)
             {
                 foreach (object lObj in liveArr)
@@ -3298,20 +3457,16 @@ namespace Aion2PetsOverlay
                     };
                     Canvas.SetLeft(dot, p.X - 4);
                     Canvas.SetTop(dot, p.Y - 4);
-                    _miniMapCanvas.Children.Add(dot);
+                    worldCanvas.Children.Add(dot);
                 }
             }
 
-            // 6. Live Player Marker with View Direction / Field of View Cone
+            // 7. Live Player Marker with View Direction / Field of View Cone
             if (hasPlayer)
             {
-                double px = Convert.ToDouble(playerArr[0]);
-                double py = Convert.ToDouble(playerArr[1]);
-                Point pp = toScreen(px, py);
-
                 if (pp.X >= -60 && pp.X <= w + 60 && pp.Y >= -60 && pp.Y <= h + 60)
                 {
-                    double heading = GetDouble(mm, "playerHeading", _lastPlayerHeading ?? 0.0);
+                    double arrowAngle = _compassRotateMode ? 0.0 : curHeading;
 
                     // Semi-transparent field of view cone pointing in player view direction
                     Polygon fovCone = new Polygon
@@ -3319,35 +3474,35 @@ namespace Aion2PetsOverlay
                         Points = new PointCollection
                         {
                             new Point(0, 0),
-                            new Point(-16, -46),
-                            new Point(16, -46)
+                            new Point(-18, -52),
+                            new Point(18, -52)
                         },
                         Fill = new LinearGradientBrush(
-                            Color.FromArgb(90, 56, 189, 248),
+                            Color.FromArgb(95, 56, 189, 248),
                             Color.FromArgb(0, 56, 189, 248),
                             new Point(0.5, 1),
                             new Point(0.5, 0)
                         ),
-                        RenderTransform = new RotateTransform(heading),
+                        RenderTransform = new RotateTransform(arrowAngle),
                         IsHitTestVisible = false
                     };
                     Canvas.SetLeft(fovCone, pp.X);
                     Canvas.SetTop(fovCone, pp.Y);
-                    _miniMapCanvas.Children.Add(fovCone);
+                    worldCanvas.Children.Add(fovCone);
 
-                    // Direction Arrow Pointer
+                    // Direction Arrow Pointer (Chevron)
                     System.Windows.Shapes.Path dirArrow = new System.Windows.Shapes.Path
                     {
-                        Data = Geometry.Parse("M 0,-18 L 6,-5 L 0,-9 L -6,-5 Z"),
+                        Data = Geometry.Parse("M 0,-20 L 7,-6 L 0,-10 L -7,-6 Z"),
                         Fill = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
                         Stroke = Brushes.White,
-                        StrokeThickness = 1.2,
-                        RenderTransform = new RotateTransform(heading),
+                        StrokeThickness = 1.3,
+                        RenderTransform = new RotateTransform(arrowAngle),
                         IsHitTestVisible = false
                     };
                     Canvas.SetLeft(dirArrow, pp.X);
                     Canvas.SetTop(dirArrow, pp.Y);
-                    _miniMapCanvas.Children.Add(dirArrow);
+                    worldCanvas.Children.Add(dirArrow);
 
                     // Player Halo & Center Dot
                     Ellipse halo = new Ellipse
@@ -3356,12 +3511,12 @@ namespace Aion2PetsOverlay
                         Height = 14,
                         Stroke = new SolidColorBrush(Color.FromRgb(56, 189, 248)),
                         StrokeThickness = 2,
-                        Fill = new SolidColorBrush(Color.FromArgb(120, 14, 165, 233)),
+                        Fill = new SolidColorBrush(Color.FromArgb(130, 14, 165, 233)),
                         IsHitTestVisible = false
                     };
                     Canvas.SetLeft(halo, pp.X - 7);
                     Canvas.SetTop(halo, pp.Y - 7);
-                    _miniMapCanvas.Children.Add(halo);
+                    worldCanvas.Children.Add(halo);
 
                     Ellipse playerDot = new Ellipse
                     {
@@ -3372,19 +3527,79 @@ namespace Aion2PetsOverlay
                     };
                     Canvas.SetLeft(playerDot, pp.X - 3);
                     Canvas.SetTop(playerDot, pp.Y - 3);
-                    _miniMapCanvas.Children.Add(playerDot);
+                    worldCanvas.Children.Add(playerDot);
                 }
             }
 
-            // 7. Mini-Map Bottom Caption
+            _miniMapCanvas.Children.Add(worldCanvas);
+
+            // 8. Floating Compass Rose Widget (Top-Left)
+            Border compassDial = new Border
+            {
+                Width = 26,
+                Height = 26,
+                CornerRadius = new CornerRadius(13),
+                Background = new SolidColorBrush(Color.FromArgb(210, 15, 23, 42)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(130, 56, 189, 248)),
+                BorderThickness = new Thickness(1),
+                IsHitTestVisible = true,
+                ToolTip = Tr("מצב מצפן (לחץ לשינוי)", "Compass Mode (Click to toggle)", "Режим компаса")
+            };
+            compassDial.MouseDown += (s, e) =>
+            {
+                _compassRotateMode = !_compassRotateMode;
+                RenderMiniMap();
+            };
+
+            Canvas dialCanvas = new Canvas { Width = 26, Height = 26 };
+            double needleAngle = _compassRotateMode ? -curHeading : 0.0;
+
+            System.Windows.Shapes.Path needleN = new System.Windows.Shapes.Path
+            {
+                Data = Geometry.Parse("M 0,0 L -3,-9 L 0,-11 L 3,-9 Z"),
+                Fill = new SolidColorBrush(Color.FromRgb(239, 68, 68)),
+                RenderTransform = new RotateTransform(needleAngle),
+                IsHitTestVisible = false
+            };
+            Canvas.SetLeft(needleN, 13);
+            Canvas.SetTop(needleN, 13);
+            dialCanvas.Children.Add(needleN);
+
+            System.Windows.Shapes.Path needleS = new System.Windows.Shapes.Path
+            {
+                Data = Geometry.Parse("M 0,0 L -3,9 L 0,11 L 3,9 Z"),
+                Fill = new SolidColorBrush(Color.FromRgb(148, 163, 184)),
+                RenderTransform = new RotateTransform(needleAngle),
+                IsHitTestVisible = false
+            };
+            Canvas.SetLeft(needleS, 13);
+            Canvas.SetTop(needleS, 13);
+            dialCanvas.Children.Add(needleS);
+
+            Ellipse dialPin = new Ellipse
+            {
+                Width = 4, Height = 4,
+                Fill = Brushes.White,
+                IsHitTestVisible = false
+            };
+            Canvas.SetLeft(dialPin, 11);
+            Canvas.SetTop(dialPin, 11);
+            dialCanvas.Children.Add(dialPin);
+
+            compassDial.Child = dialCanvas;
+            Canvas.SetLeft(compassDial, 7);
+            Canvas.SetTop(compassDial, 7);
+            _miniMapCanvas.Children.Add(compassDial);
+
+            // 9. Mini-Map Bottom Caption
             string areaName = GetStr(mm, "areaName", "");
-            double curHeading = GetDouble(mm, "playerHeading", _lastPlayerHeading ?? 0.0);
             string coordStr = hasPlayer ? string.Format("{0:0}, {1:0}", playerArr[0], playerArr[1]) : "";
 
             string caption = "";
             if (!string.IsNullOrEmpty(areaName)) caption += "📍 " + areaName;
             if (!string.IsNullOrEmpty(coordStr)) caption += (caption.Length > 0 ? " · " : "") + coordStr;
             if (hasPlayer) caption += string.Format(" · 🧭 {0:0}°", curHeading);
+            if (_showCubes && nearbyCubesCount > 0) caption += string.Format(" · 📦 {0} {1}", nearbyCubesCount, Tr("קוביות באזור", "cubes in area", "сундуков рядом"));
             caption += (caption.Length > 0 ? " · " : "") + Tr("גרור להזזה · 🎯 שחקן · ⤢ הגדל", "Drag to pan · 🎯 Recenter · ⤢ Expand", "Перетащите · 🎯 К игроку · ⤢ Развернуть");
             _miniMapCaption.Text = caption;
         }
