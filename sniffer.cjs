@@ -145,7 +145,22 @@ const state = {
   soulsGained: {}, // petId -> session gained
   liveNpcs: new Map(), // entityId -> { entity, npc, x, y, z, hp, maxHp, updatedAt }
   aroundCounts: {},    // npcId -> count (merged from live packets + Questlog tracker)
-  recentEvents: []     // Recent soul drops / level-ups
+  recentEvents: [],    // Recent soul drops / level-ups
+  cleric: {
+    self: {
+      entity: 0,
+      name: "ManatDam",
+      class: "cleric",
+      level: 45,
+      hp: 11527,
+      maxHp: 11527,
+      mp: 3286,
+      maxMp: 3286,
+      isDead: false,
+      debuffs: []
+    },
+    party: []
+  }
 };
 
 function pushRecentEvent(evt) {
@@ -413,6 +428,90 @@ function syncFromQuestlogFiles() {
         items: activeSession.items || []
       };
     }
+  }
+
+  // 6. Sync Cleric combat telemetry from newest combat-logs ndjson
+  const combatLogsDir = path.join(QUESTLOG_DIR, "combat-logs");
+  if (fs.existsSync(combatLogsDir)) {
+    try {
+      const files = fs.readdirSync(combatLogsDir).filter(f => f.endsWith(".ndjson"));
+      if (files.length > 0) {
+        let newestFile = null;
+        let newestMtime = 0;
+        for (const f of files) {
+          const st = fs.statSync(path.join(combatLogsDir, f));
+          if (st.mtimeMs > newestMtime) {
+            newestMtime = st.mtimeMs;
+            newestFile = path.join(combatLogsDir, f);
+          }
+        }
+        if (newestFile) {
+          const content = fs.readFileSync(newestFile, "utf8");
+          const lines = content.split("\n");
+          state.cleric.party = [];
+
+          // Pass 1: Read initial 250 lines for player & party declarations
+          for (let i = 0; i < Math.min(lines.length, 250); i++) {
+            const line = lines[i]?.trim();
+            if (!line) continue;
+            try {
+              const ev = JSON.parse(line);
+              if (ev.type === "player") {
+                if (ev.self || (state.character.name && ev.name === state.character.name)) {
+                  if (ev.entity) {
+                    state.cleric.self.entity = ev.entity;
+                    if (!state.selfEntity) state.selfEntity = ev.entity;
+                  }
+                  if (ev.name) state.cleric.self.name = ev.name;
+                  if (ev.level) state.cleric.self.level = ev.level;
+                  if (ev.class) state.cleric.self.class = ev.class;
+                }
+              }
+            } catch {}
+          }
+
+          // Pass 2: Read backward for latest live HP and maxHp
+          const foundHp = new Set();
+          const foundMaxHp = new Set();
+          const scanLimit = Math.max(0, lines.length - 30000);
+          for (let i = lines.length - 1; i >= scanLimit; i--) {
+            const line = lines[i]?.trim();
+            if (!line) continue;
+            try {
+              const ev = JSON.parse(line);
+              if (ev.type === "hp") {
+                const ent = ev.entity;
+                const isSelf = (ent === state.cleric.self.entity || ent === state.selfEntity);
+                if (isSelf) {
+                  if (!foundHp.has(ent) && ev.hp !== undefined) {
+                    state.cleric.self.hp = Number(ev.hp);
+                    state.cleric.self.isDead = (state.cleric.self.hp <= 0);
+                    foundHp.add(ent);
+                  }
+                  if (!foundMaxHp.has(ent) && (ev.maxHp !== undefined || ev.max !== undefined)) {
+                    state.cleric.self.maxHp = Number(ev.maxHp || ev.max);
+                    foundMaxHp.add(ent);
+                  }
+                } else {
+                  let member = state.cleric.party.find(p => p.entity === ent);
+                  if (member) {
+                    if (!foundHp.has(ent) && ev.hp !== undefined) {
+                      member.hp = Number(ev.hp);
+                      member.isDead = (member.hp <= 0);
+                      foundHp.add(ent);
+                    }
+                    if (!foundMaxHp.has(ent) && (ev.maxHp !== undefined || ev.max !== undefined)) {
+                      member.maxHp = Number(ev.maxHp || ev.max);
+                      foundMaxHp.add(ent);
+                    }
+                  }
+                }
+              }
+            } catch {}
+          }
+        }
+      }
+    } catch {}
   }
 
   // Ensure default world is always set
@@ -804,6 +903,56 @@ const OPCODES = new Map([
     read: e => ({
       decreasedSoulPoints: e.list(t => ({ rideDataId: t.i32(), point: t.i32() }))
     })
+  }],
+  [36096, {
+    name: "CharPointUpdate_NT",
+    read: e => {
+      const key = e.vi32(), r = e.u8();
+      return {
+        key,
+        updates: r & 1 ? e.map(i => [i.u8(), i.i32()]) : new Map(),
+        updates64: r & 2 ? e.map(i => [i.u8(), i.i64()]) : new Map()
+      };
+    }
+  }],
+  [37403, {
+    name: "PartyUpdateMemberHPMP_NT",
+    read: e => ({
+      key: e.vi32(),
+      hp: e.vi64(),
+      hpMax: e.vi64(),
+      mp: e.i32(),
+      mpMax: e.i32(),
+      live: e.bool()
+    })
+  }],
+  [38443, {
+    name: "ForceUpdateMemberHPMP_NT",
+    read: e => ({
+      key: e.vi32(),
+      hp: e.vi64(),
+      hpMax: e.vi64(),
+      mp: e.i32(),
+      mpMax: e.i32(),
+      live: e.bool()
+    })
+  }],
+  [14378, {
+    name: "AbnormalAdd_NT",
+    read: e => ({
+      key: e.vi32(),
+      abnormal: {
+        id: e.i32(),
+        casterKey: e.vi32()
+      }
+    })
+  }],
+  [14380, {
+    name: "AbnormalRemoveList_NT",
+    read: e => ({
+      key: e.vi32(),
+      abnormals: e.list(t => t.i32())
+    })
   }]
 ]);
 
@@ -957,6 +1106,16 @@ function handleDecodedPacket(pkt) {
       if (detail.serverId) state.character.server = detail.serverId;
       if (detail.charLevel) state.character.level = detail.charLevel;
       if (detail.race) state.character.race = detail.race === 1 ? "light" : "dark";
+      if (entState) {
+        if (entState.hp) state.cleric.self.hp = Number(entState.hp);
+        if (entState.hpMax) state.cleric.self.maxHp = Number(entState.hpMax);
+        if (entState.mp) state.cleric.self.mp = entState.mp;
+        if (entState.mpMax) state.cleric.self.maxMp = entState.mpMax;
+        state.cleric.self.isDead = (state.cleric.self.hp <= 0);
+      }
+      if (detail && detail.nickname) state.cleric.self.name = detail.nickname;
+      if (detail && detail.charLevel) state.cleric.self.level = detail.charLevel;
+      state.cleric.self.entity = key;
       updateMapAndArea(mapId, entState.pos?.x, entState.pos?.y, entState.pos?.z);
       dirty = true;
       break;
@@ -1014,11 +1173,90 @@ function handleDecodedPacket(pkt) {
       break;
     }
     case "CharDie_NT": {
+      if (pkt.data.key === state.selfEntity) {
+        state.cleric.self.isDead = true;
+        state.cleric.self.hp = 0;
+        dirty = true;
+      }
+      const deadMember = state.cleric.party.find(p => p.entity === pkt.data.key);
+      if (deadMember) {
+        deadMember.isDead = true;
+        deadMember.hp = 0;
+        dirty = true;
+      }
       const npc = state.liveNpcs.get(pkt.data.key);
       if (npc) {
         state.kills[npc.npc] = (state.kills[npc.npc] || 0) + 1;
         state.liveNpcs.delete(pkt.data.key);
         rebuildAroundCounts();
+        dirty = true;
+      }
+      break;
+    }
+    case "CharPointUpdate_NT": {
+      const { key, updates, updates64 } = pkt.data;
+      const getVal = (id) => {
+        if (updates && updates.has(id)) return updates.get(id);
+        if (updates64 && updates64.has(id)) return Number(updates64.get(id));
+        return undefined;
+      };
+      const hp = getVal(0);
+      const maxHp = getVal(7);
+      const mp = getVal(1);
+      const maxMp = getVal(8);
+      if (key === state.selfEntity || !state.selfEntity || state.cleric.self.entity === key) {
+        if (hp !== undefined) state.cleric.self.hp = hp;
+        if (maxHp !== undefined) state.cleric.self.maxHp = maxHp;
+        if (mp !== undefined) state.cleric.self.mp = mp;
+        if (maxMp !== undefined) state.cleric.self.maxMp = maxMp;
+        state.cleric.self.isDead = (state.cleric.self.hp <= 0);
+        dirty = true;
+      }
+      let member = state.cleric.party.find(p => p.entity === key);
+      if (member) {
+        if (hp !== undefined) member.hp = hp;
+        if (maxHp !== undefined) member.maxHp = maxHp;
+        member.isDead = (member.hp <= 0);
+        dirty = true;
+      }
+      break;
+    }
+    case "PartyUpdateMemberHPMP_NT":
+    case "ForceUpdateMemberHPMP_NT": {
+      const { key, hp, hpMax, mp, maxMp, live } = pkt.data;
+      if (key === state.selfEntity) {
+        state.cleric.self.hp = Number(hp);
+        state.cleric.self.maxHp = Number(hpMax);
+        state.cleric.self.isDead = !live || (state.cleric.self.hp <= 0);
+        dirty = true;
+      } else {
+        let member = state.cleric.party.find(p => p.entity === key);
+        if (!member) {
+          member = { entity: key, name: "Party_" + key, hp: Number(hp), maxHp: Number(hpMax), debuffs: [], isDead: !live };
+          state.cleric.party.push(member);
+        } else {
+          member.hp = Number(hp);
+          member.maxHp = Number(hpMax);
+          member.isDead = !live || (member.hp <= 0);
+        }
+        dirty = true;
+      }
+      break;
+    }
+    case "AbnormalAdd_NT": {
+      const { key, abnormal } = pkt.data;
+      const target = (key === state.selfEntity) ? state.cleric.self : state.cleric.party.find(p => p.entity === key);
+      if (target && abnormal && abnormal.id) {
+        if (!target.debuffs.includes(abnormal.id)) target.debuffs.push(abnormal.id);
+        dirty = true;
+      }
+      break;
+    }
+    case "AbnormalRemoveList_NT": {
+      const { key, abnormals } = pkt.data;
+      const target = (key === state.selfEntity) ? state.cleric.self : state.cleric.party.find(p => p.entity === key);
+      if (target && abnormals) {
+        target.debuffs = target.debuffs.filter(d => !abnormals.includes(d));
         dirty = true;
       }
       break;
@@ -1487,6 +1725,8 @@ function buildOverlayPayload() {
   let totalMissingSoulsAll = 0;
   let totalMissingSoulsCurrentMap = 0;
   let totalMissingSoulsCurrentArea = 0;
+  let inCurrentAreaPetsCount = 0;
+  let inCurrentAreaLevel3Count = 0;
   let missingPetsInCurrentArea = 0;
   let totalAroundPets = 0;
   let inCurrentMapPetsCount = 0;
@@ -1595,9 +1835,14 @@ function buildOverlayPayload() {
       if (progress.isLevel3) inCurrentMapLevel3Count++;
       if (pet.farmable) totalMissingSoulsCurrentMap += progress.remainingToLevel3;
     }
-    if ((spawnsInCurrentArea > 0 || aroundCount > 0) && pet.farmable && !progress.isLevel3) {
-      missingPetsInCurrentArea++;
-      totalMissingSoulsCurrentArea += progress.remainingToLevel3;
+    if ((spawnsInCurrentArea > 0 || aroundCount > 0) && pet.farmable) {
+      inCurrentAreaPetsCount++;
+      if (progress.isLevel3) {
+        inCurrentAreaLevel3Count++;
+      } else {
+        missingPetsInCurrentArea++;
+        totalMissingSoulsCurrentArea += progress.remainingToLevel3;
+      }
     }
     if (aroundCount > 0) {
       totalAroundPets++;
@@ -1607,8 +1852,11 @@ function buildOverlayPayload() {
       ? 1.0
       : (progress.nextStepNeed > 0 ? Math.min(1.0, progress.soulsInStep / progress.nextStepNeed) : 0.0);
 
+    const nearestDistanceM = nearestLiveDistanceM ?? nearestSpawnDistanceM;
+
     return {
       id: pet.id,
+      petId: pet.id,
       name: pet.name,
       primaryMonsterName,
       icon: pet.icon,
@@ -1626,6 +1874,8 @@ function buildOverlayPayload() {
       totalHaveToward3: progress.totalHaveToward3,
       totalRequiredFor3: progress.totalRequiredFor3,
       remainingToLevel3: progress.remainingToLevel3, // 0 if Level 3!
+      remainingToLv3: progress.remainingToLevel3,
+      distMeters: nearestDistanceM,
       isLevel3: progress.isLevel3,
       canLevelUpNow: progress.canLevelUpNow,
       stepFillRatio: Number(stepFillRatio.toFixed(3)),
@@ -1635,7 +1885,7 @@ function buildOverlayPayload() {
       spawnsInCurrentMap,
       spawnsInCurrentArea,
       currentMapAreas,
-      nearestDistanceM: nearestLiveDistanceM ?? nearestSpawnDistanceM,
+      nearestDistanceM,
       isLiveDistance: nearestLiveDistanceM !== null,
       directionAngleDeg,
       directionArrow,
@@ -1771,6 +2021,8 @@ function buildOverlayPayload() {
       totalNpcsAroundCount,
       inCurrentMapPetsCount,
       inCurrentMapLevel3Count,
+      inCurrentAreaPetsCount,
+      inCurrentAreaLevel3Count,
       missingPetsInCurrentArea,
       missingSoulsCurrentArea: totalMissingSoulsCurrentArea,
       missingSoulsCurrentMap: totalMissingSoulsCurrentMap,
@@ -1791,6 +2043,10 @@ function buildOverlayPayload() {
     recentEvents: state.recentEvents,
     inventory: state.inventory || {},
     craftingSession: state.craftingSession || null,
+    cleric: state.cleric,
+    around: rows.filter(r => (r.aroundCount > 0) || (r.nearestDistanceM !== null && r.nearestDistanceM <= 150)).sort((a, b) => ((a.nearestDistanceM !== null ? a.nearestDistanceM : 99999) - (b.nearestDistanceM !== null ? b.nearestDistanceM : 99999))),
+    area: rows.filter(r => r.spawnsInCurrentArea > 0).sort((a, b) => ((a.nearestDistanceM !== null ? a.nearestDistanceM : 99999) - (b.nearestDistanceM !== null ? b.nearestDistanceM : 99999))),
+    all: rows,
     pets: rows
   };
 }

@@ -1,168 +1,169 @@
-# 🐾 Aion 2 Overlay Hub — Pets & Crafting Tracker
+# 🐾 Aion 2 Studio — Overlay Manager & Cleric Smart Assistant
 
-![Version](https://img.shields.io/badge/Version-v2.5.0--beta-blue.svg)
+![Version](https://img.shields.io/badge/Version-v2.9.0--dev-orange.svg)
+![Status](https://img.shields.io/badge/Status-In%20Development%20%28WIP%29-yellow)
 ![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)
 ![Framework](https://img.shields.io/badge/UI-WPF%20%28.NET%204.x%29-512BD4?logo=dotnet)
-![Standalone](https://img.shields.io/badge/Engine-Pure%20C%23%20Direct%20Sync-10B981)
+![Standalone](https://img.shields.io/badge/Engine-Pure%20C%23%20WPF%20Standalone-10B981)
 ![Languages](https://img.shields.io/badge/i18n-HEB%20%7C%20ENG%20%7C%20RUS-F59E0B)
-![Status](https://img.shields.io/badge/Map%20Engine-WIP%20%2F%20Experimental-FFA500)
 
-A lightweight, always-on-top, transparent in-game **Overlay Hub for Aion 2** with zero installation required. Built natively in C# WPF to run alongside your game seamlessly, passively tracking your **Pets & Souls progress toward Level 3**, **⚒️ Crafting & Essence Extraction Goals**, and an **Integrated Live Radar Mini-Map** inspired by MetaRoad.
+A modern, native desktop **Aion 2 Studio & Overlay Manager** built in C# WPF. It serves as a unified control hub application that manages independent, lightweight floating in-game HUDs across your monitors: **🐾 Pets & Crafting HUD**, **⚚ Cleric Smart Action Assist (Authentic Fextralife Skill Slots & Live Rotation)**, and an **Interactive Radar Mini-Map**.
 
----
-
-## 📸 In-Game Preview
-
-![Aion 2 Overlay Hub In-Game Screenshot](./screenshoot.png)
+> [!NOTE]
+> **סטטוס גרסה:** גרסה זו (`v2.9.0-dev`) נמצאת כרגע בשלבי פיתוח פעילים (`In Development`). כל מודול פועל עצמאית כ-HUD צף מעל המשחק עם שליטה מלאה מתוך מרכז הבקרה הראשי של Aion 2 Studio.
 
 ---
 
-## 🌟 Core Modules
+## 📐 Aion 2 Studio — מרכז הבקרה וניהול התוספים (`Alt+E`)
 
-### 1. 🐾 Pets & Souls Tracker (Lv. 3 Soul Engine)
-* **Real-time Soul Progress**: Tracks souls needed for every pet tier (`5` for Lv.1, `25` for Lv.2, `75` for Lv.3 — `105` total souls for completion).
-* **Soul Stone (Genus) Color Matching**:
-  * 🟠 **Feral**: Amber / Orange (`#F97316`)
-  * 🔵 **Intellect**: Sky Blue (`#60A5FA`)
-  * 🟢 **Nature**: Emerald Green (`#4ADE80`)
-  * 🟣 **Trans**: Purple / Violet (`#C084FC`)
-  * 🟡 **Special**: Gold / Yellow (`#FACC15`)
-* **Live Distance & Direction**: Displays closest live monsters with dynamic arrows (`↑`, `↗`, `→`, `↘`...) and real-time distance in meters (`12 m`, `45 m`).
-* **Intelligent Tab Filtering**:
-  * **Around (`מסביב`)**: Only monsters currently alive within radar proximity.
-  * **Area (`באזור`)**: Pets farmable in your current subzone.
-  * **Map (`במפה`)**: All pets located on the active world map.
-  * **All (`הכל`)**: Complete searchable database of all 209 pets.
+* **מרכז שליטה שולחני מאוחד (`Alt+E`)**: לחיצה על `Alt+E` מכל מקום פותחת וממזערת מיידית את חלון ה-Studio הראשי מבלי לעצור את המשחק.
+* **סרגל בקרה עליון לכלל התוספים (Global Control Bar)**:
+  * 🎚️ **סליידר שקיפות כללית (Global Opacity)**: כוונון רמת השקיפות של כל התוספים יחד (20% עד 100%) בזמן אמת.
+  * ⚡ **בורר קצב רענון נתונים**: שליטה על מהירות קריאת המידע (100ms, 250ms, 500ms, 1s).
+  * 👁️ **הצג / הסתר הכל (`F9`)**: כפתור מאסטר להסתרה או החזרה של כל חלונות ה-HUD בלחיצה אחת.
+  * 🔒 **נעילת עכבר (`F10`)**: מעבר למצב Click-Through (`WS_EX_TRANSPARENT`) שמונע קליקים בטעות על התוספים בזמן קרבות סוערים.
+  * 🎯 **איפוס כל המיקומים**: מחזיר בלחיצה אחת את כל חלונות ה-HUD למיקומי ברירת המחדל שלהם.
+* **כרטיסי תוספים חכמים (Glassmorphism Module Cards)**:
+  * לוח שליטה מודרני בעיצוב Glassmorphism מקורי עם כרטיס ייעודי לכל תוסף (חיות וקראפט, עוזר קלריק, מיני-מפה, וקוביות נסתרות).
+  * בכל כרטיס: תגית סטטוס חיה (`🟢 פעיל` / `⚪ כבוי`), פירוט המצב הפעיל, מתג הפעלה/כיבוי, איפוס מיקום, וכפתור **`[ ⚙️ ערוך הגדרות תוסף ]`**.
+* **דפי הגדרות נפרדים ועשירים לכל תוסף בנפרד**:
+  * לחיצה על עריכת הגדרות של תוסף מסוים פותחת לוח התאמה אישית מלא המיועד רק עבורו.
 
 ---
 
-### 2. ⚒️ Live Crafting & Essence Extraction Tracker
-* **Real-Time Inventory Sync**: Automatically monitors your inventory stacks. When you gather an herb, mine ore, or collect drops, the counter updates immediately (`18 / 25 · Missing: 7`).
-* **Wishlist & Quantity Goals**: Click items to add them to your target wishlist. Use quick buttons (`−10`, `+10`, `×2`, `🗑️`) to set goal quantities.
-* **Recipe Decomposition**: Select finished items (e.g., *Major Life Potion*, *Recovery Serum*), and the tracker breaks them down into their base extraction materials (Angelica, Titanium Ore, Water Crystal).
-* **🎉 Ready to Craft Celebration**: When all required ingredients for pinned crafts are gathered, a prominent green celebration banner alerts you that you are ready to craft!
-* **Gathering Statistics (Rate / Hour & ETA)**: Calculates your live gathering speed (`+N / hr`) and gives an estimated completion time based on active gathering timestamps.
-* **Extraction Guide & Node Levels**: Lists recommended zones and minimum Essence Extraction level requirements (`Req. Lv. 1`–`Lv. 210`) for every material.
+## 🐾 Pets & Crafting HUD — מעקב חיות מתקדם וסינון חכם
+
+* **מערכת צ'יפים כפולה לסינון חיות מעל המשחק**:
+  * **שורת טווח תצוגה**:
+    * `[ 📍 באזור ]` (ברירת מחדל): מציג רק חיות שנמצאות באזור (Zone) הפעיל.
+    * `[ 🎯 סביבי ]`: מציג מפלצות בטווח של עד 150 מטר סביב השחקן.
+    * `[ 🗺️ כל המפה ]`: מציג את כל המפלצות במפת העולם הפעילה.
+  * **שורת סינון סטטוס חיה**:
+    * `[ ⏳ רק חסר ]` (**ברירת מחדל — תואם גרסה 2.5.0**): **מסתיר לחלוטין חיות שהגיעו לדרגה 3 (MAX)** ומציג רק מפלצות שמהן עדיין חסרות נשמות!
+    * `[ ⭐ מומלץ לקלאס ]`: מסנן ומציג רק חיות שסוג אבן הנשמה שלהן מומלץ למקצוע שלך (עבור Cleric: אבני **Intellect** ו-**Transcendence**).
+    * `[ 📋 הכל ]`: מציג את כל החיות כולל חיות שכבר הגיעו למקס.
+* **התאמת צבע לפי אבן הנשמה (Soul Stone Genus)**:
+  * 🟠 **Feral**: ענבר / כתום (`#F97316`)
+  * 🔵 **Intellect**: כחול שמיים (`#60A5FA`)
+  * 🟢 **Nature**: ירוק אמרלד (`#4ADE80`)
+  * 🟣 **Trans**: סגול / ויולט (`#C084FC`)
+  * 🟡 **Special**: זהב / צהוב (`#FACC15`)
+* **מרחק וכיוון בזמן אמת**: חישוב מרחק מדויק במטרים וחצים דינמיים (`↑`, `↗`, `→`, `↘`...) למפלצת החיה הקרובה ביותר.
+* **אייקונים רשמיים**: כל 209 האייקונים של החיות בפורמט WebP מתוך מאגר המשחק.
 
 ---
 
-### 3. 🗺️ Integrated World Mini-Map & Radar (MetaRoad Style)
-* **High-Resolution World Terrain**: Renders official high-res map textures for active zones (Altgard, Morheim, Verteron, Eltnen, Reshanta/Abyss).
-* **🏷️ Level Guide (Area Mob Levels)**:
-  * MetaRoad-style circular badges at each subzone center with mob level bounds (`10-11`, `18-20`, `27-30`, `33`, `43-45`).
-  * Color-coded by difficulty: 🟢 Green (Lv. 1–22), 🟡 Amber (Lv. 23–36), 🔴 Red (Lv. 37–50+).
-  * Prominent subzone name pills underneath each badge.
-* **📦 Hidden Cubes & Mystery Chests**:
-  * 1,440+ Hidden Cube spawn locations and regional chests displayed as bright purple squares (`#C084FC`).
-  * Hover tooltip shows cube name and location.
-* **🧭 Compass vs. North-Up Mode**:
-  * **Compass Mode (`🧭`)**: Map rotates around the player with continuous heading estimation and 0% black corner clipping.
-  * **North-Up Mode (`⬆️`)**: Stable fixed map with 360° rotating player chevron and vision flashlight cone.
-* **Interactive Navigation**:
-  * Left-Click Drag: Pan around the world.
-  * Mouse Wheel: Zoom in/out (`0.06x` to `4.0x`).
-  * Double-Click / `🎯`: Re-center on player.
-  * `⤢`: Expand / collapse map height (`180px` ↔ `330px`).
+## ⚚ Cleric Smart Action Assist — סדרות ריפוי חכם לקלריק
+
+* **אייקונים אותנטיים מ-Fextralife**:
+  * **Healing Light (`[2]`)**: ריפוי ישיר ממוקד לקלריק ולחבר הקבוצה הפגוע ביותר (מופעל ב-≤ 80% HP).
+  * **Absolution (`[1]`)**: ריפוי חירום מתפרץ לקבוצה + הסרת קללות (מופעל ב-≤ 40% HP עם הבהוב חירום אדום).
+  * **Radiant Recovery (`[R]`)**: הסרת קללות, רעלים ודיבאפים + שחזור חיים מיידי.
+  * **Light of Regeneration (`[Q]`)**: ריפוי מתמשך (HoT) המומלץ כהמשך קומבו לכל ריפוי.
+  * **Summon Resurrection (`[3]`)**: התראת החייאה מיידית כשחבר קבוצה נופל בקרב (`HP = 0`).
+* **סדרות לחיצה (Action Combo Bar)**:
+  * כפתור ראשי גדול (56×56) מואר עם תגית מקש בולטת (`[2]`, `[1]`, `[R]`, `[3]`) וחץ המורה על הסקיל הבא בסדרה (`[Q]`).
+* **העלמה מלאה של הסקילים כשהשחקן בריא (Standby Auto-Collapse)**:
+  * ברגע שהחיים עולים מעל סף הריפוי (80%), **כפתורי הסקילים נעלמים לחלוטין מהמסך** (`Visibility = Collapsed`).
+  * החלון מתכווץ לפס סטטוס ירוק אלגנטי בגובה 76 פיקסלים בלבד: `● בריא ויציב (12,760 / 12,760) · מוכן לפעולה`.
+  * הסקילים קופצים למסך אך ורק בעת ירידת חיים או הופעת קללה, ונעלמים שוב ברגע שבריאים!
+* **מצב סולו מוחלט מול מצב קבוצה**:
+  * **מצב סולו (👤)**: עוקב ומרפא אך ורק אותך, ומתעלם לחלוטין משחקנים זרים באזור.
+  * **מצב קבוצה (👥)**: עוקב אחרי חברי הקבוצה (Party) בלבד.
+* **מניעת תקיעת התראות**: דילוג חכם על היסטוריית לוגים ישנה ומעקב ישיר בזמן אמת.
+* **צליל התראה עדין**: מושמע פעם אחת בלבד במעבר להתראה חדשה (ללא השמעה חוזרת ומציקה).
+* **מעבדת בדיקות וסימולציה בלייב**: 5 כפתורים לבדיקת כל תרחיש אפשרי על המסך בלחיצה אחת (`75% פצוע`, `30% חירום`, `דיספל קללה`, `החייאת חבר`, `100% בריא`).
 
 ---
 
-## ⚠️ Known Issues & Work-In-Progress (שקיפות ובאגים ידועים)
+## 🗺️ Integrated World Mini-Map & Radar — מפה ורדאר סביבתי
 
-> [!WARNING]
-> מודול המפה החדש נמצא כרגע בשלב בטא פעיל (`Experimental / WIP`). אנחנו ממשיכים לשפר וללטש אותו:
->
-> 1. **סיבוב מפה במקום (Stationary Heading)**:
->    * כיוון השחקן מסונכרן מתנועת ה-Delta והפאקטות. בעמידה מוחלטת ללא תנועה, סיבוב המצלמה במקום עדיין עשוי שלא לעדכן מיידית את זווית המצפן. מומלץ להשתמש במצב **צפון קבוע (`⬆️`)** לניווט יציב ביותר ללא סחרחורת.
-> 2. **פיקסול בזום קיצוני (Texture Scaling)**:
->    * טקסטורות המשחק המקוריות הן בגודל 2048×2048. בזום עמוק מאוד (`>2.5x`) על מפה רחבה, פני השטח עשויים להיראות מטושטשים או מפוקסלים. אנו עובדים על שילוב טקסטורות Vector/Tiles משופרות.
-> 3. **גובה (Z-Axis Elevation)**:
->    * הרדאר מציג מרחק אוקלידי דו-ממדי (X/Y). במערות רב-מפלסיות או הרים תלולים, מפלצת עשויה להופיע קרובה אך להימצא במפלס שמעל או מתחת לשחקן.
-> 4. **סנכרון תרגום מלא לחלק מהמתכונים**:
->    * חלק משמות צמחי הקראפט הגבוהים מוצגים באנגלית/רוסית וממתינים להשלמת מילון השמות העברי.
+* **טקסטורות עולם ברזולוציה גבוהה**: Altgard, Morheim, Verteron, Eltnen, Reshanta/Abyss.
+* **🏷️ מדריך רמות אזור (Subzone Mob Levels)**: עיגולים צבעוניים עם רמות המפלצות בכל אזור לפי רמת קושי.
+* **📦 קוביות מוסתרות (Hidden Cubes)**: מעל 1,440 מיקומי קוביות הרחבת תיק ותיבות מוסתרות בריבועים סגולים בולטים.
+* **שליטה וזום**: זום רציף (0.5x עד 3.0x), איפוס על השחקן וגרירה חופשית.
 
 ---
 
-## ⌨️ Global Hotkeys
+## ⌨️ קיצורי מקשים גלובליים (Global Hotkeys)
 
-| Hotkey | Action | Description |
+| מקש קיצור | פעולה | תיאור |
 | :---: | :--- | :--- |
-| **`F9`** | **Click-Through Mode** | Passes all mouse clicks through the overlay directly into Aion 2. Overlay becomes transparent to mouse events. |
-| **`F10`** | **Show / Hide** | Instantly hides or restores the overlay window. |
+| **`Alt+E`** | **פתיחת / מזעור Studio** | פותח או ממזער את חלון הניהול הראשי של Aion 2 Studio בכל רגע. |
+| **`F9`** | **הצג / הסתר את כל התוספים** | מעלים או מחזיר את כל חלונות ה-HUD הצפים מעל המשחק. |
+| **`F10`** | **נעילת עכבר (Click-Through)** | הופך את כל התוספים לשקופים לקליקים, כך שקליקים עוברים ישירות למשחק ללא הפרעה בקרב. |
 
 ---
 
-## 🚀 Quick Start for Players
+## 🚀 הפעלה מהירה לשחקנים (Zero-Setup Direct Launch)
 
-### Zero-Setup Direct Launch (ללא התקנות)
-If you or a friend cloned/downloaded this repository, you **do NOT need to install Node.js or run any build tools**:
-
-1. Download or clone this repository to your PC.
-2. Launch **Aion 2** and log into your character.
-3. Double-click **`Aion2PetsOverlay.exe`** (or run `start-overlay.bat`).
-4. The overlay connects to Questlog / game memory in **0 ms** and starts tracking!
+1. הורד או בצע `git clone` למאגר זה במחשב.
+2. הפעל את המשחק **Aion 2** והיכנס לדמות שלך.
+3. הפעל את הקובץ **`Aion2PetsOverlay.exe`** (או הרץ את `start-overlay.bat`).
+4. התוספים יתחברו למשחק באופן מיידי ויתחילו לפעול!
 
 ---
 
-## 🛠️ Building from Source (`Overlay.cs`)
+## 🛠️ הידור מקוד מקור (Building from Source)
 
-You can compile `Overlay.cs` directly using the built-in Microsoft .NET Framework C# compiler (`csc.exe`) without needing Visual Studio:
+ניתן לקמפל את `Overlay.cs` באמצעות קובץ ה-Script המובנה `build.ps1` או ישירות באמצעות מהדר ה-.NET של Windows:
 
+```powershell
+.\build.ps1
+```
+
+או ידנית:
 ```powershell
 $wpf = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF"
 & "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe" `
   /nologo /codepage:65001 /utf8output /target:winexe `
   /out:"Aion2PetsOverlay.exe" `
-  /lib:$wpf `
-  /r:PresentationCore.dll `
-  /r:PresentationFramework.dll `
-  /r:WindowsBase.dll `
-  /r:System.Xaml.dll `
-  /r:System.Web.Extensions.dll `
-  /r:System.dll `
-  /r:System.Drawing.dll `
-  /r:System.Core.dll `
+  /r:$wpf\PresentationFramework.dll `
+  /r:$wpf\PresentationCore.dll `
+  /r:$wpf\WindowsBase.dll `
+  /r:C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Xaml.dll `
+  /r:C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Web.Extensions.dll `
   "Overlay.cs"
 ```
 
 ---
 
-## 📁 Repository Structure
+## 📁 מבנה הפרויקט (Repository Structure)
 
 ```text
-├── Aion2PetsOverlay.exe      # Compiled native WPF overlay (portable, zero-install)
-├── Overlay.cs                # Pure C# WPF engine (Hub, Pets Tracker, Crafting, Mini-Map)
-├── sniffer.cjs               # Optional Node.js packet & zone synchronizer
-├── overlay.html              # OBS / Browser edition
-├── start-overlay.bat         # Windows one-click startup batch script
-├── screenshoot.png           # In-game preview screenshot
+├── Aion2PetsOverlay.exe      # קובץ ההפעלה המקומפל (Portable, אפס התקנות)
+├── Overlay.cs                # קוד המקור המלא ב-C# (Studio, Pets HUD, Cleric Assist)
+├── build.ps1                 # סקריפט קימפול מהיר ב-PowerShell
+├── sniffer.cjs               # סנכרון פאקטות Npcap וקובצי Questlog
+├── start-overlay.bat         # הפעלה מהירה בלחיצה כפולה
+├── screenshoot.png           # צילום מסך מתוך המשחק
 └── data/
-    ├── pets-db.json          # 209 Aion 2 Pets database with drop rates and spawn locations
-    ├── chests-db.json        # 1,440+ Hidden Cubes & Chests coordinates across all 7 worlds
-    ├── area-levels.json      # Precomputed subzone mob levels (p10-p90) for Level Guide
-    ├── crafting-wishlist.json# Saved user craft wishlist & goals
-    ├── maps/                 # High-resolution world terrain textures (.png)
-    ├── icons/                # Auto-cached pet icons (.webp) [git-ignored]
-    ├── overlay-state.json    # Real-time state IPC exchange [git-ignored]
-    └── ui-settings.json      # User preferences, window size & active tabs [git-ignored]
+    ├── skills/               # אייקוני סקילים רשמיים של קלריק מ-Fextralife
+    ├── icons/                # 209 אייקוני חיות מקוריים בפורמט WebP
+    ├── pets-database.json    # מאגר 209 חיות עם סיכויי נפילה ומיקומים
+    ├── chests-db.json        # מעל 1,440 קואורדינטות של קוביות מוסתרות ותיבות
+    ├── overlay-state.json    # קובץ IPC להעברת נתוני משחק חיים [git-ignored]
+    └── studio-settings.json  # הגדרות שקיפות, ספים ומיקומי חלונות [git-ignored]
 ```
 
 ---
 
-## 🇮🇱 מדריך מקיף למשתמש בעברית
+## 🇮🇱 מה חדש בגרסה v2.9.0-dev (בפיתוח)?
 
-### מה חדש בגרסה v2.5.0?
-1. **⚒️ מעקב קראפטינג ואיסוף (Crafting & Essence Extraction)**:
-   * מעקב ישיר אחר חומרי גלם בתיק (צמחים, עפרות, אבני חן, את'ר וקריסטלים).
-   * הגדרת כמויות יעד (למשל `100` אנג'ליקה או `50` עפרת טיטניום).
-   * התרעת **`🎉 Ready to Craft!`** ירוקה ברגע שכל החומרים נאספו.
-   * קצב איסוף לשעה (Rate/hr) וזמן משוער לסיום איסוף (ETA).
-   * מדריך אזורי איסוף מומלצים ודרישות רמת איסוף (`Req. Lv. 1–210`).
-
-2. **🗺️ מפת עולם ורדאר חי (בהשראת MetaRoad)**:
-   * **מדריך רמות אזור (`🏷️ LVL`)**: מציג עיגולים צבעוניים עם רמות המפלצות בכל אזור (`10-11`, `18-20`, `27-30`, `33`, `43-45`) לפי קושי (ירוק, צהוב, אדום).
-   * **קוביות מוסתרות (`📦`)**: מעל 1,440 נקודות של Hidden Cubes ותיבות שלל בריבועים סגולים בולטים (`#C084FC`) בדיוק כמו במפה של MetaRoad.
-   * **צבע לפי אבן הנשמה (Soul Stone)**: פס ההתקדמות בכרטיסייה והנקודות במפה נצבעים בצבע האבן המדויקת של המפלצת (ענבר, כחול, ירוק, סגול, זהב).
-   * **מצב מצפן (`🧭`) או צפון קבוע (`⬆️`)**: מפה מסתובבת ללא פינות שחורות, או מצב צפון יציב עם חץ שחקן מסתובב ב-360°.
-
-3. **חברים מורידים מגיט וזה עובד מיד**:
-   * הקובץ המקומפל `Aion2PetsOverlay.exe` נמצא במאגר ורץ עצמאית לחלוטין ללא התקנת ספריות חיצוניות או Node.js.
+1. **🐾 מערכת סינון חיות מתקדמת ב-HUD**:
+   * נוסף מצב **`[ ⏳ רק חסר ]`** (ברירת מחדל): מסתיר לחלוטין חיות שהגיעו לדרגה 3 (MAX) ומציג בדיוק מה שחסר באזור הנוכחי (תואם גרסה 2.5.0!).
+   * נוסף מצב **`[ ⭐ מומלץ לקלאס ]`**: מסנן לפי אבני נשמה מומלצות למקצוע (Intellect / Transcendence לקלריק).
+   * נוסף מצב **`[ 📋 הכל ]`**: תצוגה מלאה כולל MAX.
+   * שורת טווח מהירה: באזור / סביבי / כל המפה.
+2. **⚚ פתרון מלא לבעיית סקיל הריפוי שנתקע במסך**:
+   * תיקון סריקת הלוגים (דילוג מיידי על נתוני עבר ישנים) ועדכון חי של ה-HP ב-250ms.
+   * **העלמת כפתורי הסקילים כשהשחקן בריא**: מעל סף 80% HP, כפתורי הסקילים מוסתרים לחלוטין (`Visibility = Collapsed`), וה-HUD מתכווץ לפס ירוק עדין של 76 פיקסלים.
+   * מצב סולו אמיתי: מעקב בלעדי אחריך ללא הפרעה משחקנים זרים ברדיוס.
+   * סדרות קומבו סקילים עם הדגשת מקשים (`[2]` אור מרפא + `[Q]` רגנרציה, `[1]` חירום מתפרץ, `[R]` הסרת קללות, `[3]` החייאה).
+3. **📐 עיצוב מקורי ומודרני ל-Aion 2 Studio + הגדרות ייעודיות לכל תוסף**:
+   * הסרת עיצוב ה-16:9 canvas המועתק ומעבר לעיצוב Glassmorphism מקורי.
+   * לוח בקרה ראשי (Overlays Dashboard) עם סרגל גלובלי (סליידר שקיפות, קצב עדכון, F9, F10, ואיפוס כל המיקומים).
+   * 4 כרטיסים ייעודיים לכל תוסף עם תגית סטטוס בלייב, מתג הפעלה/כיבוי, איפוס וכפתור ישיר `[ ⚙️ ערוך הגדרות תוסף ]`.
+   * לוחות הגדרות נפרדים ועשירים עבור כל תוסף (ספי ריפוי, מצב סולו/קבוצה, מעבדת סימולציה ב-5 שלבים, סינון חיות וזום מפה).
+4. **🌐 תמיכה מושלמת בשפות וקידוד נקי**:
+   * שמירה בקידוד UTF-8 נקי עם BOM. עברית, רוסית, אנגלית ואימוג'ים מופיעים בצורה חדה וללא שום תווים משובשים.

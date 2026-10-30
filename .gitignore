@@ -3,10 +3,19 @@ data/overlay-state.json
 data/overlay-state.json.tmp
 data/live-state.json
 data/ui-settings.json
+data/studio-settings.json
 data/map-override.json
+crash.log
 
 # Downloaded icon cache (auto-downloaded at runtime)
 data/icons/
+
+# Scratch & test scripts
+scratch/
+check_*.cjs
+find_*.cjs
+test_*.cjs
+trace_*.cjs
 
 # Node / OS files
 node_modules/
